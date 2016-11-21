@@ -1,0 +1,209 @@
+swagger: "2.0"
+produces:
+- application/json
+schemes:
+- http
+consumes:
+- application/json
+info:
+  contact:
+    email: ivan@flanders.co.nz
+    name: Ivan Porto Carrero
+  description: Patmos is a distributed store for retrieving information
+  license:
+    name: MIT
+    url: https://github.com/casualjim/patmosdb/blob/master/LICENSE
+  title: Patmos K/V datastore
+  version: 0.0.1
+
+parameters:
+  requestId:
+    name: X-Request-Id
+    description: A unique UUID for the request
+    in: header
+    type: string
+    required: false
+    minLength: 1
+  entryKey:
+    name: key
+    description: The key for a given entry
+    in: path
+    type: string
+    required: true
+    minLength: 1
+
+responses:
+  errorNotFound:
+    description: The entry was not found
+    headers:
+      X-Request-Id:
+        description: The request id this is a response to
+        type: string
+    schema:
+      $ref: '#/definitions/error'
+  errorResponse:
+    description: Error
+    headers:
+      X-Request-Id:
+        description: The request id this is a response to
+        type: string
+    schema:
+      $ref: '#/definitions/error'
+
+paths:
+  /kv:
+    parameters:
+      - $ref: "#/parameters/requestId"
+    get:
+      operationId: findKeys
+      tags:
+      - kv
+      description: lists all the keys
+      parameters:
+        - name: prefix
+          in: query
+          type: string
+      responses:
+        200:
+          description: list the keys known to this datastore
+          headers:
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string          
+          schema:
+            type: array
+            items:
+              type: string
+        default:
+          $ref: "#/responses/errorResponse"
+    
+  /kv/{key}:
+    parameters:
+      - $ref: "#/parameters/requestId"
+      - $ref: "#/parameters/entryKey"
+    put:
+      operationId: putEntry
+      tags:
+        - kv
+      parameters:
+        - name: If-Match
+          in: header
+          description: when this is an update to an entry, then this field needs to be present
+          type: string
+        - name: body
+          in: body
+          required: true
+          schema:
+            type: string
+            format: binary
+            maxLength: 536870912
+      responses:
+        201:
+          description: entry was created
+          headers:
+            Location:
+              description: the location to get the newly created entry
+              type: string
+              format: uri
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string
+            Etag:
+              description: The version of this entry
+              type: string
+        204:
+          description: entry was updated
+          headers:
+            ETag:
+              description: The version of this entry
+              type: string
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string
+        
+        404:
+          $ref: "#/responses/errorNotFound"
+       
+        409:
+          description: there is a version mismatch for the entry
+          headers:
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string
+          schema:
+            $ref: "#/definitions/error"
+        
+        default:
+          $ref: "#/responses/errorResponse"
+     
+    get:
+      operationId: getEntry
+      tags:
+        - kv
+      parameters:
+        - name: 'If-None-Match'
+          in: header
+          required: false
+          type: string
+      responses:
+        200:
+          description: entry was found
+          headers:
+            Last-Modified:
+              description: The time this entry was last modified
+              type: string
+            Content-Type:
+              description: The content type of this entry
+              type: string
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string
+            ETag:
+              description: The version of this entry
+              type: string
+            Content-Length:
+              description: The size of the entry
+              type: integer
+              format: int64
+          schema:
+            type: string
+            format: binary
+        404:
+          $ref: "#/responses/errorNotFound"
+        default:
+          $ref: "#/responses/errorResponse"
+     
+    delete:
+      operationId: deleteEntry
+      tags:
+        - kv
+      responses:
+        204:
+         description: the delete was successful
+        404:
+          $ref: "#/responses/errorNotFound"
+        default:
+          $ref: "#/responses/errorResponse"
+
+definitions:
+  error:
+    description: |
+      the error model is a model for all the error responses coming from PatmosDB
+    type: object
+    required:
+      - message
+      - code
+    properties:
+      code:
+        type: integer
+        format: int64
+        description: The error code
+      message:
+        description: The error message
+        type: string
+      helpUrl:
+        description: link to help page explaining the error in more detail
+        type: string
+        format: uri
+      cause:
+        $ref: '#/definitions/error'
