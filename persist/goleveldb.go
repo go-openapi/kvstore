@@ -58,7 +58,11 @@ func (g *goleveldbStore) Get(key string) (Value, error) {
 }
 
 func (g *goleveldbStore) FindByPrefix(prefix string) ([]KeyValue, error) {
-	iter := g.DB.NewIterator(util.BytesPrefix([]byte(prefix)), nil)
+	var rg *util.Range
+	if prefix != "" {
+		rg = util.BytesPrefix([]byte(prefix))
+	}
+	iter := g.DB.NewIterator(rg, nil)
 	var result []KeyValue
 	for iter.Next() {
 		result = append(result, KeyValue{Key: string(iter.Key()), Value: iter.Value()})

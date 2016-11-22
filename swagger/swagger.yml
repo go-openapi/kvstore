@@ -69,14 +69,14 @@ paths:
           headers:
             X-Request-Id:
               description: The request id this is a response to
-              type: string          
+              type: string
           schema:
             type: array
             items:
               type: string
         default:
           $ref: "#/responses/errorResponse"
-    
+
   /kv/{key}:
     parameters:
       - $ref: "#/parameters/requestId"
@@ -120,10 +120,10 @@ paths:
             X-Request-Id:
               description: The request id this is a response to
               type: string
-        
+
         404:
           $ref: "#/responses/errorNotFound"
-       
+
         409:
           description: there is a version mismatch for the entry
           headers:
@@ -132,10 +132,10 @@ paths:
               type: string
           schema:
             $ref: "#/definitions/error"
-        
+
         default:
           $ref: "#/responses/errorResponse"
-     
+
     get:
       operationId: getEntry
       tags:
@@ -172,16 +172,18 @@ paths:
           $ref: "#/responses/errorNotFound"
         default:
           $ref: "#/responses/errorResponse"
-     
+
     delete:
       operationId: deleteEntry
       tags:
         - kv
       responses:
         204:
-         description: the delete was successful
-        404:
-          $ref: "#/responses/errorNotFound"
+          description: the delete was successful
+          headers:
+            X-Request-Id:
+              description: The request id this is a response to
+              type: string
         default:
           $ref: "#/responses/errorResponse"
 

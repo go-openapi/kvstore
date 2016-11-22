@@ -21,6 +21,7 @@ type Runtime struct {
 	db persist.Store
 }
 
+// DB returns the persistent store
 func (r *Runtime) DB() persist.Store {
 	return r.db
 }
