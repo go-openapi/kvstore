@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/swag"
 
-	"github.com/casualjim/patmosdb/models"
+	"github.com/casualjim/patmosdb/gen/models"
 )
 
 /*GetEntryOK entry was found

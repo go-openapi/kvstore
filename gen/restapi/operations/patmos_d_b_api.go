@@ -15,7 +15,7 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/casualjim/patmosdb/restapi/operations/kv"
+	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
 )
 
 // NewPatmosDBAPI creates a new PatmosDB instance

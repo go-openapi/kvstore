@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/casualjim/patmosdb/models"
+	"github.com/casualjim/patmosdb/gen/models"
 )
 
 /*FindKeysOK list the keys known to this datastore

@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/casualjim/patmosdb/models"
+	"github.com/casualjim/patmosdb/gen/models"
 )
 
 /*DeleteEntryNoContent the delete was successful
@@ -16,6 +16,10 @@ import (
 swagger:response deleteEntryNoContent
 */
 type DeleteEntryNoContent struct {
+	/*The request id this is a response to
+	  Required: true
+	*/
+	XRequestID string `json:"X-Request-Id"`
 }
 
 // NewDeleteEntryNoContent creates DeleteEntryNoContent with default headers values
@@ -23,55 +27,19 @@ func NewDeleteEntryNoContent() *DeleteEntryNoContent {
 	return &DeleteEntryNoContent{}
 }
 
-// WriteResponse to the client
-func (o *DeleteEntryNoContent) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
-
-	rw.WriteHeader(204)
-}
-
-/*DeleteEntryNotFound The entry was not found
-
-swagger:response deleteEntryNotFound
-*/
-type DeleteEntryNotFound struct {
-	/*The request id this is a response to
-	  Required: true
-	*/
-	XRequestID string `json:"X-Request-Id"`
-
-	// In: body
-	Payload *models.Error `json:"body,omitempty"`
-}
-
-// NewDeleteEntryNotFound creates DeleteEntryNotFound with default headers values
-func NewDeleteEntryNotFound() *DeleteEntryNotFound {
-	return &DeleteEntryNotFound{}
-}
-
-// WithXRequestID adds the xRequestId to the delete entry not found response
-func (o *DeleteEntryNotFound) WithXRequestID(xRequestID string) *DeleteEntryNotFound {
+// WithXRequestID adds the xRequestId to the delete entry no content response
+func (o *DeleteEntryNoContent) WithXRequestID(xRequestID string) *DeleteEntryNoContent {
 	o.XRequestID = xRequestID
 	return o
 }
 
-// SetXRequestID sets the xRequestId to the delete entry not found response
-func (o *DeleteEntryNotFound) SetXRequestID(xRequestID string) {
+// SetXRequestID sets the xRequestId to the delete entry no content response
+func (o *DeleteEntryNoContent) SetXRequestID(xRequestID string) {
 	o.XRequestID = xRequestID
-}
-
-// WithPayload adds the payload to the delete entry not found response
-func (o *DeleteEntryNotFound) WithPayload(payload *models.Error) *DeleteEntryNotFound {
-	o.Payload = payload
-	return o
-}
-
-// SetPayload sets the payload to the delete entry not found response
-func (o *DeleteEntryNotFound) SetPayload(payload *models.Error) {
-	o.Payload = payload
 }
 
 // WriteResponse to the client
-func (o *DeleteEntryNotFound) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+func (o *DeleteEntryNoContent) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
 	// response header X-Request-Id
 
@@ -80,12 +48,7 @@ func (o *DeleteEntryNotFound) WriteResponse(rw http.ResponseWriter, producer run
 		rw.Header().Set("X-Request-Id", xRequestID)
 	}
 
-	rw.WriteHeader(404)
-	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
-			panic(err) // let the recovery middleware deal with this
-		}
-	}
+	rw.WriteHeader(204)
 }
 
 /*DeleteEntryDefault Error

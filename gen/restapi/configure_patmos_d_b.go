@@ -8,13 +8,13 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"github.com/casualjim/patmosdb/restapi/operations"
-	"github.com/casualjim/patmosdb/restapi/operations/kv"
+	"github.com/casualjim/patmosdb/gen/restapi/operations"
+	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
 
-//go:generate swagger generate server --target .. --name PatmosDB --spec ../swagger/swagger.yml
+//go:generate swagger generate server --target ../gen --name PatmosDB --spec ../swagger/swagger.yml --exclude-main
 
 func configureFlags(api *operations.PatmosDBAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
