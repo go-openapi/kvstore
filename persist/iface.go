@@ -2,6 +2,7 @@ package persist
 
 import (
 	"errors"
+	"unsafe"
 
 	"github.com/OneOfOne/xxhash"
 )
@@ -17,10 +18,22 @@ var (
 	ErrVersionMismatch  = errors.New("version mismatch")
 )
 
+// UnsafeStringToBytes converts strings to []byte without memcopy
+func UnsafeStringToBytes(s string) []byte {
+	/* #nosec */
+	return *(*[]byte)(unsafe.Pointer(&s))
+}
+
+// UnsafeBytesToString converts []byte to string without a memcopy
+func UnsafeBytesToString(b []byte) string {
+	/* #nosec */
+	return *(*string)(unsafe.Pointer(&b))
+}
+
 // VersionOf calculates the version of the value to store
 func VersionOf(data []byte) uint64 {
 	h := xxhash.New64()
-	h.Write(data)
+	_, _ = h.Write(data)
 	return h.Sum64()
 }
 

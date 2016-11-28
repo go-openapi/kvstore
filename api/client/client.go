@@ -35,3 +35,8 @@ func (k *KvStore) FindKeys(prefix string) ([]string, error) {
 	}
 	return keys.Payload, nil
 }
+
+func (k *KvStore) Delete(key string) error {
+
+	k.client.Kv.DeleteEntry(kv.NewDeleteEntryParams().WithKey(key))
+}

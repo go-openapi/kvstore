@@ -21,27 +21,31 @@ func NewGoLevelDBStore(cfg *viper.Viper) (Store, error) {
 	}, nil
 }
 
-func goleveldbSyncWrite() *opt.WriteOptions {
-	return &opt.WriteOptions{Sync: true}
+var (
+	goleveldbSyncWrite   *opt.WriteOptions
+	goleveldbNoCacheRead *opt.ReadOptions
+)
+
+func init() {
+	goleveldbSyncWrite = &opt.WriteOptions{Sync: true}
+	goleveldbNoCacheRead = &opt.ReadOptions{DontFillCache: true}
 }
 
 func goleveldbRewriteError(err error) error {
-	if err == leveldb.ErrNotFound {
+	switch err {
+	case leveldb.ErrNotFound:
 		return ErrNotFound
-	}
-	if err == leveldb.ErrReadOnly {
+	case leveldb.ErrReadOnly:
 		return ErrReadOnly
-	}
-	if err == leveldb.ErrClosed {
+	case leveldb.ErrClosed:
 		return ErrClosed
-	}
-	if err == leveldb.ErrSnapshotReleased {
+	case leveldb.ErrSnapshotReleased:
 		return ErrSnapshotReleased
-	}
-	if err == ErrIterReleased {
+	case leveldb.ErrIterReleased:
 		return ErrIterReleased
+	default:
+		return err
 	}
-	return err
 }
 
 func goleveldbRewriteValueError(value []byte, err error) (Value, error) {
@@ -64,8 +68,7 @@ func (g *goleveldbStore) Put(key string, value Value) error {
 	// need this to be 0 when this is a new entry
 	newVersion := value.Version
 
-	opts := opt.ReadOptions{DontFillCache: true}
-	prev, err := goleveldbRewriteValueError(g.DB.Get([]byte(key), &opts))
+	prev, err := goleveldbRewriteValueError(g.DB.Get(UnsafeStringToBytes(key), goleveldbNoCacheRead))
 	if err != nil {
 		if err != ErrNotFound {
 			return goleveldbRewriteError(err)
@@ -86,18 +89,19 @@ func (g *goleveldbStore) Put(key string, value Value) error {
 		return err
 	}
 
-	return goleveldbRewriteError(g.DB.Put([]byte(key), data, goleveldbSyncWrite()))
+	return goleveldbRewriteError(g.DB.Put(UnsafeStringToBytes(key), data, goleveldbSyncWrite))
 }
 
 func (g *goleveldbStore) Get(key string) (Value, error) {
-	return goleveldbRewriteValueError(g.DB.Get([]byte(key), nil))
+	return goleveldbRewriteValueError(g.DB.Get(UnsafeStringToBytes(key), nil))
 }
 
 func (g *goleveldbStore) FindByPrefix(prefix string) ([]KeyValue, error) {
 	var rg *util.Range
 	if prefix != "" {
-		rg = util.BytesPrefix([]byte(prefix))
+		rg = util.BytesPrefix(UnsafeStringToBytes(prefix))
 	}
+
 	iter := g.DB.NewIterator(rg, nil)
 	var result []KeyValue
 	for iter.Next() {
@@ -106,8 +110,9 @@ func (g *goleveldbStore) FindByPrefix(prefix string) ([]KeyValue, error) {
 			iter.Release()
 			return nil, err
 		}
-		result = append(result, KeyValue{Key: string(iter.Key()), Value: value})
+		result = append(result, KeyValue{Key: UnsafeBytesToString(iter.Key()), Value: value})
 	}
+	iter.Release()
 
 	err := iter.Error()
 	if err != nil {
@@ -117,12 +122,9 @@ func (g *goleveldbStore) FindByPrefix(prefix string) ([]KeyValue, error) {
 }
 
 func (g *goleveldbStore) Delete(key string) error {
-	return goleveldbRewriteError(g.DB.Delete([]byte(key), goleveldbSyncWrite()))
+	return goleveldbRewriteError(g.DB.Delete(UnsafeStringToBytes(key), goleveldbSyncWrite))
 }
 
 func (g *goleveldbStore) Close() error {
-	if g.DB == nil {
-		return nil
-	}
 	return g.DB.Close()
 }
