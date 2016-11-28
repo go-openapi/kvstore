@@ -41,9 +41,13 @@ type KvstoreAPI struct {
 	Middleware      func(middleware.Builder) http.Handler
 	// JSONConsumer registers a consumer for a "application/json" mime type
 	JSONConsumer runtime.Consumer
+	// BinConsumer registers a consumer for a "application/octet-stream" mime type
+	BinConsumer runtime.Consumer
 
 	// JSONProducer registers a producer for a "application/json" mime type
 	JSONProducer runtime.Producer
+	// BinProducer registers a producer for a "application/octet-stream" mime type
+	BinProducer runtime.Producer
 
 	// KvDeleteEntryHandler sets the operation handler for the delete entry operation
 	KvDeleteEntryHandler kv.DeleteEntryHandler
@@ -112,8 +116,16 @@ func (o *KvstoreAPI) Validate() error {
 		unregistered = append(unregistered, "JSONConsumer")
 	}
 
+	if o.BinConsumer == nil {
+		unregistered = append(unregistered, "BinConsumer")
+	}
+
 	if o.JSONProducer == nil {
 		unregistered = append(unregistered, "JSONProducer")
+	}
+
+	if o.BinProducer == nil {
+		unregistered = append(unregistered, "BinProducer")
 	}
 
 	if o.KvDeleteEntryHandler == nil {
@@ -161,6 +173,9 @@ func (o *KvstoreAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consum
 		case "application/json":
 			result["application/json"] = o.JSONConsumer
 
+		case "application/octet-stream":
+			result["application/octet-stream"] = o.BinConsumer
+
 		}
 	}
 	return result
@@ -176,6 +191,9 @@ func (o *KvstoreAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produc
 
 		case "application/json":
 			result["application/json"] = o.JSONProducer
+
+		case "application/octet-stream":
+			result["application/octet-stream"] = o.BinProducer
 
 		}
 	}

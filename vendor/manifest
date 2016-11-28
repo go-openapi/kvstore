@@ -2,6 +2,14 @@
 	"version": 0,
 	"dependencies": [
 		{
+			"importpath": "github.com/OneOfOne/xxhash",
+			"repository": "https://github.com/OneOfOne/xxhash",
+			"vcs": "git",
+			"revision": "8e3f99d9489277dae933ed6f2daae376a6c7b011",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/PuerkitoBio/purell",
 			"repository": "https://github.com/PuerkitoBio/purell",
 			"vcs": "git",

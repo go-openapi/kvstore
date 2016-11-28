@@ -32,6 +32,7 @@ type PutEntryParams struct {
 	HTTPRequest *http.Request
 
 	/*when this is an update to an entry, then this field needs to be present
+	  Pattern: [0-9]*
 	  In: header
 	*/
 	IfMatch *string
@@ -96,6 +97,19 @@ func (o *PutEntryParams) bindIfMatch(rawData []string, hasKey bool, formats strf
 	}
 
 	o.IfMatch = &raw
+
+	if err := o.validateIfMatch(formats); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (o *PutEntryParams) validateIfMatch(formats strfmt.Registry) error {
+
+	if err := validate.Pattern("If-Match", "header", (*o.IfMatch), `[0-9]*`); err != nil {
+		return err
+	}
 
 	return nil
 }

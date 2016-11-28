@@ -22,8 +22,15 @@ package cmd
 
 import (
 	"fmt"
+	"log"
+
+	"github.com/go-openapi/kvstore/api/client"
 
 	"github.com/spf13/cobra"
+)
+
+var (
+	url string
 )
 
 // keysCmd represents the keys command
@@ -37,8 +44,21 @@ Cobra is a CLI library for Go that empowers applications.
 This application is a tool to generate the needed files
 to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
-		// TODO: Work your own magic here
-		fmt.Println("keys called")
+		cl, err := client.New(url)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		var prefix string
+		if len(args) > 0 {
+			prefix = args[0]
+		}
+		log.Printf("getting keys for prefix %q", prefix)
+		result, err := cl.FindKeys(prefix)
+		if err != nil {
+			log.Fatalln(err)
+		}
+
+		fmt.Println(result)
 	},
 }
 
@@ -46,6 +66,9 @@ func init() {
 	RootCmd.AddCommand(keysCmd)
 
 	// Here you will define your flags and configuration settings.
+
+	keysCmd.PersistentFlags().StringVar(&url, "url", "u", "The url of the kvstore to use")
+	_ = keysCmd.MarkPersistentFlagRequired("url")
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:

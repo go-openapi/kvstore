@@ -14,9 +14,13 @@ K/V store is a simple single node store for retrieving key/value information
     Consumes:
     - application/json
 
+    - application/octet-stream
+
 
     Produces:
     - application/json
+
+    - application/octet-stream
 
 
 swagger:meta

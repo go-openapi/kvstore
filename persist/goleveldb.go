@@ -2,6 +2,7 @@ package persist
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/spf13/viper"
 	"github.com/syndtr/goleveldb/leveldb"
@@ -60,10 +61,31 @@ type goleveldbStore struct {
 }
 
 func (g *goleveldbStore) Put(key string, value Value) error {
+	// need this to be 0 when this is a new entry
+	newVersion := value.Version
+
+	opts := opt.ReadOptions{DontFillCache: true}
+	prev, err := goleveldbRewriteValueError(g.DB.Get([]byte(key), &opts))
+	if err != nil {
+		if err != ErrNotFound {
+			return goleveldbRewriteError(err)
+		}
+		if err == ErrNotFound && newVersion != 0 {
+			return ErrGone
+		}
+		value.Version = VersionOf(value.Value)
+	}
+
+	if prev.Version != newVersion {
+		return ErrVersionMismatch
+	}
+
+	value.LastUpdated = time.Now().UTC().UnixNano()
 	data, err := value.MarshalMsg(nil)
 	if err != nil {
 		return err
 	}
+
 	return goleveldbRewriteError(g.DB.Put([]byte(key), data, goleveldbSyncWrite()))
 }
 

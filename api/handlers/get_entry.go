@@ -3,6 +3,8 @@ package handlers
 import (
 	"bytes"
 	"io/ioutil"
+	"strconv"
+	"time"
 
 	"github.com/go-openapi/kvstore"
 	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
@@ -32,6 +34,18 @@ func (d *getEntry) Handle(params kv.GetEntryParams) middleware.Responder {
 		return kv.NewGetEntryDefault(0).WithXRequestID(rid).WithPayload(modelsError(err))
 	}
 
-	payload := ioutil.NopCloser(bytes.NewBuffer([]byte(value)))
-	return kv.NewGetEntryOK().WithXRequestID(rid).WithPayload(payload)
+	lastModified := time.Unix(0, value.LastUpdated).UTC().Format(time.RFC822Z)
+	curVerStr := swag.StringValue(params.IfNoneMatch)
+	if curVerStr != "" { // If-None-Match is optional
+		curVer, err := strconv.ParseUint(curVerStr, 10, 64)
+		if err != nil {
+			return kv.NewGetEntryDefault(400).WithXRequestID(rid).WithPayload(modelsError(err))
+		}
+		if curVer == value.Version {
+			return kv.NewGetEntryNotModified().WithXRequestID(rid).WithLastModified(lastModified).WithETag(curVerStr)
+		}
+	}
+
+	payload := ioutil.NopCloser(bytes.NewBuffer(value.Value))
+	return kv.NewGetEntryOK().WithXRequestID(rid).WithPayload(payload).WithETag(strconv.FormatUint(value.Version, 10)).WithLastModified(lastModified)
 }

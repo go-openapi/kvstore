@@ -52,6 +52,13 @@ func (o *PutEntryReader) ReadResponse(response runtime.ClientResponse, consumer 
 		}
 		return nil, result
 
+	case 410:
+		result := NewPutEntryGone()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+
 	default:
 		result := NewPutEntryDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -199,6 +206,42 @@ func (o *PutEntryConflict) Error() string {
 }
 
 func (o *PutEntryConflict) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response header X-Request-Id
+	o.XRequestID = response.GetHeader("X-Request-Id")
+
+	o.Payload = new(models.Error)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewPutEntryGone creates a PutEntryGone with default headers values
+func NewPutEntryGone() *PutEntryGone {
+	return &PutEntryGone{}
+}
+
+/*PutEntryGone handles this case with default header values.
+
+The entry is deleted
+*/
+type PutEntryGone struct {
+	/*The request id this is a response to
+	 */
+	XRequestID string
+
+	Payload *models.Error
+}
+
+func (o *PutEntryGone) Error() string {
+	return fmt.Sprintf("[PUT /kv/{key}][%d] putEntryGone  %+v", 410, o.Payload)
+}
+
+func (o *PutEntryGone) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// response header X-Request-Id
 	o.XRequestID = response.GetHeader("X-Request-Id")

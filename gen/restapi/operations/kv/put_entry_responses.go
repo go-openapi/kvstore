@@ -282,6 +282,68 @@ func (o *PutEntryConflict) WriteResponse(rw http.ResponseWriter, producer runtim
 	}
 }
 
+/*PutEntryGone The entry is deleted
+
+swagger:response putEntryGone
+*/
+type PutEntryGone struct {
+	/*The request id this is a response to
+	  Required: true
+	*/
+	XRequestID string `json:"X-Request-Id"`
+
+	/*
+	  In: Body
+	*/
+	Payload *models.Error `json:"body,omitempty"`
+}
+
+// NewPutEntryGone creates PutEntryGone with default headers values
+func NewPutEntryGone() *PutEntryGone {
+	return &PutEntryGone{}
+}
+
+// WithXRequestID adds the xRequestId to the put entry gone response
+func (o *PutEntryGone) WithXRequestID(xRequestID string) *PutEntryGone {
+	o.XRequestID = xRequestID
+	return o
+}
+
+// SetXRequestID sets the xRequestId to the put entry gone response
+func (o *PutEntryGone) SetXRequestID(xRequestID string) {
+	o.XRequestID = xRequestID
+}
+
+// WithPayload adds the payload to the put entry gone response
+func (o *PutEntryGone) WithPayload(payload *models.Error) *PutEntryGone {
+	o.Payload = payload
+	return o
+}
+
+// SetPayload sets the payload to the put entry gone response
+func (o *PutEntryGone) SetPayload(payload *models.Error) {
+	o.Payload = payload
+}
+
+// WriteResponse to the client
+func (o *PutEntryGone) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	// response header X-Request-Id
+
+	xRequestID := o.XRequestID
+	if xRequestID != "" {
+		rw.Header().Set("X-Request-Id", xRequestID)
+	}
+
+	rw.WriteHeader(410)
+	if o.Payload != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
+			panic(err) // let the recovery middleware deal with this
+		}
+	}
+}
+
 /*PutEntryDefault Error
 
 swagger:response putEntryDefault

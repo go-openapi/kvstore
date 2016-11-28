@@ -7,9 +7,7 @@ import (
 	"fmt"
 	"io"
 
-	"github.com/go-openapi/errors"
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/swag"
 
 	strfmt "github.com/go-openapi/strfmt"
 
@@ -32,6 +30,13 @@ func (o *GetEntryReader) ReadResponse(response runtime.ClientResponse, consumer 
 			return nil, err
 		}
 		return result, nil
+
+	case 304:
+		result := NewGetEntryNotModified()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 
 	case 404:
 		result := NewGetEntryNotFound()
@@ -64,12 +69,6 @@ func NewGetEntryOK(writer io.Writer) *GetEntryOK {
 entry was found
 */
 type GetEntryOK struct {
-	/*The size of the entry
-	 */
-	ContentLength int64
-	/*The content type of this entry
-	 */
-	ContentType string
 	/*The version of this entry
 	 */
 	ETag string
@@ -89,16 +88,6 @@ func (o *GetEntryOK) Error() string {
 
 func (o *GetEntryOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	// response header Content-Length
-	contentLength, err := swag.ConvertInt64(response.GetHeader("Content-Length"))
-	if err != nil {
-		return errors.InvalidType("Content-Length", "header", "int64", response.GetHeader("Content-Length"))
-	}
-	o.ContentLength = contentLength
-
-	// response header Content-Type
-	o.ContentType = response.GetHeader("Content-Type")
-
 	// response header ETag
 	o.ETag = response.GetHeader("ETag")
 
@@ -112,6 +101,45 @@ func (o *GetEntryOK) readResponse(response runtime.ClientResponse, consumer runt
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
 		return err
 	}
+
+	return nil
+}
+
+// NewGetEntryNotModified creates a GetEntryNotModified with default headers values
+func NewGetEntryNotModified() *GetEntryNotModified {
+	return &GetEntryNotModified{}
+}
+
+/*GetEntryNotModified handles this case with default header values.
+
+entry was found but not modified
+*/
+type GetEntryNotModified struct {
+	/*The version of this entry
+	 */
+	ETag string
+	/*The time this entry was last modified
+	 */
+	LastModified string
+	/*The request id this is a response to
+	 */
+	XRequestID string
+}
+
+func (o *GetEntryNotModified) Error() string {
+	return fmt.Sprintf("[GET /kv/{key}][%d] getEntryNotModified ", 304)
+}
+
+func (o *GetEntryNotModified) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	// response header ETag
+	o.ETag = response.GetHeader("ETag")
+
+	// response header Last-Modified
+	o.LastModified = response.GetHeader("Last-Modified")
+
+	// response header X-Request-Id
+	o.XRequestID = response.GetHeader("X-Request-Id")
 
 	return nil
 }

@@ -8,7 +8,6 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/swag"
 
 	"github.com/go-openapi/kvstore/gen/models"
 )
@@ -18,14 +17,6 @@ import (
 swagger:response getEntryOK
 */
 type GetEntryOK struct {
-	/*The size of the entry
-	  Required: true
-	*/
-	ContentLength int64 `json:"Content-Length"`
-	/*The content type of this entry
-	  Required: true
-	*/
-	ContentType string `json:"Content-Type"`
 	/*The version of this entry
 	  Required: true
 	*/
@@ -48,28 +39,6 @@ type GetEntryOK struct {
 // NewGetEntryOK creates GetEntryOK with default headers values
 func NewGetEntryOK() *GetEntryOK {
 	return &GetEntryOK{}
-}
-
-// WithContentLength adds the contentLength to the get entry o k response
-func (o *GetEntryOK) WithContentLength(contentLength int64) *GetEntryOK {
-	o.ContentLength = contentLength
-	return o
-}
-
-// SetContentLength sets the contentLength to the get entry o k response
-func (o *GetEntryOK) SetContentLength(contentLength int64) {
-	o.ContentLength = contentLength
-}
-
-// WithContentType adds the contentType to the get entry o k response
-func (o *GetEntryOK) WithContentType(contentType string) *GetEntryOK {
-	o.ContentType = contentType
-	return o
-}
-
-// SetContentType sets the contentType to the get entry o k response
-func (o *GetEntryOK) SetContentType(contentType string) {
-	o.ContentType = contentType
 }
 
 // WithETag adds the eTag to the get entry o k response
@@ -119,20 +88,6 @@ func (o *GetEntryOK) SetPayload(payload io.ReadCloser) {
 // WriteResponse to the client
 func (o *GetEntryOK) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
 
-	// response header Content-Length
-
-	contentLength := swag.FormatInt64(o.ContentLength)
-	if contentLength != "" {
-		rw.Header().Set("Content-Length", contentLength)
-	}
-
-	// response header Content-Type
-
-	contentType := o.ContentType
-	if contentType != "" {
-		rw.Header().Set("Content-Type", contentType)
-	}
-
 	// response header ETag
 
 	eTag := o.ETag
@@ -160,6 +115,90 @@ func (o *GetEntryOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 		panic(err) // let the recovery middleware deal with this
 	}
 
+}
+
+/*GetEntryNotModified entry was found but not modified
+
+swagger:response getEntryNotModified
+*/
+type GetEntryNotModified struct {
+	/*The version of this entry
+	  Required: true
+	*/
+	ETag string `json:"ETag"`
+	/*The time this entry was last modified
+	  Required: true
+	*/
+	LastModified string `json:"Last-Modified"`
+	/*The request id this is a response to
+	  Required: true
+	*/
+	XRequestID string `json:"X-Request-Id"`
+}
+
+// NewGetEntryNotModified creates GetEntryNotModified with default headers values
+func NewGetEntryNotModified() *GetEntryNotModified {
+	return &GetEntryNotModified{}
+}
+
+// WithETag adds the eTag to the get entry not modified response
+func (o *GetEntryNotModified) WithETag(eTag string) *GetEntryNotModified {
+	o.ETag = eTag
+	return o
+}
+
+// SetETag sets the eTag to the get entry not modified response
+func (o *GetEntryNotModified) SetETag(eTag string) {
+	o.ETag = eTag
+}
+
+// WithLastModified adds the lastModified to the get entry not modified response
+func (o *GetEntryNotModified) WithLastModified(lastModified string) *GetEntryNotModified {
+	o.LastModified = lastModified
+	return o
+}
+
+// SetLastModified sets the lastModified to the get entry not modified response
+func (o *GetEntryNotModified) SetLastModified(lastModified string) {
+	o.LastModified = lastModified
+}
+
+// WithXRequestID adds the xRequestId to the get entry not modified response
+func (o *GetEntryNotModified) WithXRequestID(xRequestID string) *GetEntryNotModified {
+	o.XRequestID = xRequestID
+	return o
+}
+
+// SetXRequestID sets the xRequestId to the get entry not modified response
+func (o *GetEntryNotModified) SetXRequestID(xRequestID string) {
+	o.XRequestID = xRequestID
+}
+
+// WriteResponse to the client
+func (o *GetEntryNotModified) WriteResponse(rw http.ResponseWriter, producer runtime.Producer) {
+
+	// response header ETag
+
+	eTag := o.ETag
+	if eTag != "" {
+		rw.Header().Set("ETag", eTag)
+	}
+
+	// response header Last-Modified
+
+	lastModified := o.LastModified
+	if lastModified != "" {
+		rw.Header().Set("Last-Modified", lastModified)
+	}
+
+	// response header X-Request-Id
+
+	xRequestID := o.XRequestID
+	if xRequestID != "" {
+		rw.Header().Set("X-Request-Id", xRequestID)
+	}
+
+	rw.WriteHeader(304)
 }
 
 /*GetEntryNotFound The entry was not found
