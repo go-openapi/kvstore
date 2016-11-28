@@ -9,11 +9,11 @@ info:
   contact:
     email: ivan@flanders.co.nz
     name: Ivan Porto Carrero
-  description: Patmos is a distributed store for retrieving information
+  description: K/V store is a simple single node store for retrieving key/value information
   license:
     name: MIT
-    url: https://github.com/casualjim/patmosdb/blob/master/LICENSE
-  title: Patmos K/V datastore
+    url: https://github.com/go-openapi/kvstore/blob/master/LICENSE
+  title: K/V store
   version: 0.0.1
 
 parameters:
@@ -190,7 +190,7 @@ paths:
 definitions:
   error:
     description: |
-      the error model is a model for all the error responses coming from PatmosDB
+      the error model is a model for all the error responses coming from kvstore
     type: object
     required:
       - message

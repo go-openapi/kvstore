@@ -1,6 +1,6 @@
-/*Package restapi Patmos K/V datastore
+/*Package restapi K/V store
 
-Patmos is a distributed store for retrieving information
+K/V store is a simple single node store for retrieving key/value information
 
 
     Schemes:
@@ -8,7 +8,7 @@ Patmos is a distributed store for retrieving information
     Host: localhost
     BasePath: /
     Version: 0.0.1
-    License: MIT https://github.com/casualjim/patmosdb/blob/master/LICENSE
+    License: MIT https://github.com/go-openapi/kvstore/blob/master/LICENSE
     Contact: Ivan Porto Carrero<ivan@flanders.co.nz>
 
     Consumes:

@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/swag"
 
-	"github.com/casualjim/patmosdb/gen/models"
+	"github.com/go-openapi/kvstore/gen/models"
 )
 
 /*GetEntryOK entry was found
@@ -39,7 +39,9 @@ type GetEntryOK struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload io.ReadCloser `json:"body,omitempty"`
 }
 
@@ -153,7 +155,8 @@ func (o *GetEntryOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 
 	rw.WriteHeader(200)
-	if err := producer.Produce(rw, o.Payload); err != nil {
+	payload := o.Payload
+	if err := producer.Produce(rw, payload); err != nil {
 		panic(err) // let the recovery middleware deal with this
 	}
 
@@ -169,7 +172,9 @@ type GetEntryNotFound struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -212,7 +217,8 @@ func (o *GetEntryNotFound) WriteResponse(rw http.ResponseWriter, producer runtim
 
 	rw.WriteHeader(404)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
@@ -229,7 +235,9 @@ type GetEntryDefault struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -289,7 +297,8 @@ func (o *GetEntryDefault) WriteResponse(rw http.ResponseWriter, producer runtime
 
 	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}

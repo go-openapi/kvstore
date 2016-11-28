@@ -15,12 +15,12 @@ import (
 	strfmt "github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
 )
 
-// NewPatmosAPI creates a new Patmos instance
-func NewPatmosAPI(spec *loads.Document) *PatmosAPI {
-	return &PatmosAPI{
+// NewKvstoreAPI creates a new Kvstore instance
+func NewKvstoreAPI(spec *loads.Document) *KvstoreAPI {
+	return &KvstoreAPI{
 		handlers:        make(map[string]map[string]http.Handler),
 		formats:         strfmt.Default,
 		defaultConsumes: "application/json",
@@ -30,8 +30,8 @@ func NewPatmosAPI(spec *loads.Document) *PatmosAPI {
 	}
 }
 
-/*PatmosAPI Patmos is a distributed store for retrieving information */
-type PatmosAPI struct {
+/*KvstoreAPI K/V store is a simple single node store for retrieving key/value information */
+type KvstoreAPI struct {
 	spec            *loads.Document
 	context         *middleware.Context
 	handlers        map[string]map[string]http.Handler
@@ -70,42 +70,42 @@ type PatmosAPI struct {
 }
 
 // SetDefaultProduces sets the default produces media type
-func (o *PatmosAPI) SetDefaultProduces(mediaType string) {
+func (o *KvstoreAPI) SetDefaultProduces(mediaType string) {
 	o.defaultProduces = mediaType
 }
 
 // SetDefaultConsumes returns the default consumes media type
-func (o *PatmosAPI) SetDefaultConsumes(mediaType string) {
+func (o *KvstoreAPI) SetDefaultConsumes(mediaType string) {
 	o.defaultConsumes = mediaType
 }
 
 // SetSpec sets a spec that will be served for the clients.
-func (o *PatmosAPI) SetSpec(spec *loads.Document) {
+func (o *KvstoreAPI) SetSpec(spec *loads.Document) {
 	o.spec = spec
 }
 
 // DefaultProduces returns the default produces media type
-func (o *PatmosAPI) DefaultProduces() string {
+func (o *KvstoreAPI) DefaultProduces() string {
 	return o.defaultProduces
 }
 
 // DefaultConsumes returns the default consumes media type
-func (o *PatmosAPI) DefaultConsumes() string {
+func (o *KvstoreAPI) DefaultConsumes() string {
 	return o.defaultConsumes
 }
 
 // Formats returns the registered string formats
-func (o *PatmosAPI) Formats() strfmt.Registry {
+func (o *KvstoreAPI) Formats() strfmt.Registry {
 	return o.formats
 }
 
 // RegisterFormat registers a custom format validator
-func (o *PatmosAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
+func (o *KvstoreAPI) RegisterFormat(name string, format strfmt.Format, validator strfmt.Validator) {
 	o.formats.Add(name, format, validator)
 }
 
-// Validate validates the registrations in the PatmosAPI
-func (o *PatmosAPI) Validate() error {
+// Validate validates the registrations in the KvstoreAPI
+func (o *KvstoreAPI) Validate() error {
 	var unregistered []string
 
 	if o.JSONConsumer == nil {
@@ -140,19 +140,19 @@ func (o *PatmosAPI) Validate() error {
 }
 
 // ServeErrorFor gets a error handler for a given operation id
-func (o *PatmosAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
+func (o *KvstoreAPI) ServeErrorFor(operationID string) func(http.ResponseWriter, *http.Request, error) {
 	return o.ServeError
 }
 
 // AuthenticatorsFor gets the authenticators for the specified security schemes
-func (o *PatmosAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
+func (o *KvstoreAPI) AuthenticatorsFor(schemes map[string]spec.SecurityScheme) map[string]runtime.Authenticator {
 
 	return nil
 
 }
 
 // ConsumersFor gets the consumers for the specified media types
-func (o *PatmosAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
+func (o *KvstoreAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consumer {
 
 	result := make(map[string]runtime.Consumer)
 	for _, mt := range mediaTypes {
@@ -168,7 +168,7 @@ func (o *PatmosAPI) ConsumersFor(mediaTypes []string) map[string]runtime.Consume
 }
 
 // ProducersFor gets the producers for the specified media types
-func (o *PatmosAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
+func (o *KvstoreAPI) ProducersFor(mediaTypes []string) map[string]runtime.Producer {
 
 	result := make(map[string]runtime.Producer)
 	for _, mt := range mediaTypes {
@@ -184,7 +184,7 @@ func (o *PatmosAPI) ProducersFor(mediaTypes []string) map[string]runtime.Produce
 }
 
 // HandlerFor gets a http.Handler for the provided operation method and path
-func (o *PatmosAPI) HandlerFor(method, path string) (http.Handler, bool) {
+func (o *KvstoreAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	if o.handlers == nil {
 		return nil, false
 	}
@@ -196,8 +196,8 @@ func (o *PatmosAPI) HandlerFor(method, path string) (http.Handler, bool) {
 	return h, ok
 }
 
-// Context returns the middleware context for the patmos API
-func (o *PatmosAPI) Context() *middleware.Context {
+// Context returns the middleware context for the kvstore API
+func (o *KvstoreAPI) Context() *middleware.Context {
 	if o.context == nil {
 		o.context = middleware.NewRoutableContext(o.spec, o, nil)
 	}
@@ -205,7 +205,7 @@ func (o *PatmosAPI) Context() *middleware.Context {
 	return o.context
 }
 
-func (o *PatmosAPI) initHandlerCache() {
+func (o *KvstoreAPI) initHandlerCache() {
 	o.Context() // don't care about the result, just that the initialization happened
 
 	if o.handlers == nil {
@@ -236,7 +236,7 @@ func (o *PatmosAPI) initHandlerCache() {
 
 // Serve creates a http handler to serve the API over HTTP
 // can be used directly in http.ListenAndServe(":8000", api.Serve(nil))
-func (o *PatmosAPI) Serve(builder middleware.Builder) http.Handler {
+func (o *KvstoreAPI) Serve(builder middleware.Builder) http.Handler {
 	o.Init()
 
 	if o.Middleware != nil {
@@ -246,7 +246,7 @@ func (o *PatmosAPI) Serve(builder middleware.Builder) http.Handler {
 }
 
 // Init allows you to just initialize the handler cache, you can then recompose the middelware as you see fit
-func (o *PatmosAPI) Init() {
+func (o *KvstoreAPI) Init() {
 	if len(o.handlers) == 0 {
 		o.initHandlerCache()
 	}

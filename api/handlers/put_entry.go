@@ -3,20 +3,20 @@ package handlers
 import (
 	"io/ioutil"
 
-	"github.com/casualjim/patmosdb"
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
-	"github.com/casualjim/patmosdb/persist"
+	"github.com/go-openapi/kvstore"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore/persist"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
 // NewPutEntry handles a request for saving an entry
-func NewPutEntry(rt *patmosdb.Runtime) kv.PutEntryHandler {
+func NewPutEntry(rt *kvstore.Runtime) kv.PutEntryHandler {
 	return &putEntry{rt: rt}
 }
 
 type putEntry struct {
-	rt *patmosdb.Runtime
+	rt *kvstore.Runtime
 }
 
 // Handle the put entry request

@@ -3,9 +3,9 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/casualjim/patmosdb"
-	"github.com/casualjim/patmosdb/gen/models"
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore"
+	"github.com/go-openapi/kvstore/gen/models"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
@@ -17,12 +17,12 @@ func modelsError(err error) *models.Error {
 }
 
 // NewFindKeys handles a request for finding the known keys
-func NewFindKeys(rt *patmosdb.Runtime) kv.FindKeysHandler {
+func NewFindKeys(rt *kvstore.Runtime) kv.FindKeysHandler {
 	return &findKeys{rt: rt}
 }
 
 type findKeys struct {
-	rt *patmosdb.Runtime
+	rt *kvstore.Runtime
 }
 
 // Handle the find known keys request

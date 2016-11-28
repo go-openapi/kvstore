@@ -1,7 +1,7 @@
-package patmosdb
+package kvstore
 
 import (
-	"github.com/casualjim/patmosdb/persist"
+	"github.com/go-openapi/kvstore/persist"
 	"github.com/spf13/viper"
 )
 

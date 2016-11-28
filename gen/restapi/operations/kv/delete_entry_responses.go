@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/casualjim/patmosdb/gen/models"
+	"github.com/go-openapi/kvstore/gen/models"
 )
 
 /*DeleteEntryNoContent the delete was successful
@@ -62,7 +62,9 @@ type DeleteEntryDefault struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -122,7 +124,8 @@ func (o *DeleteEntryDefault) WriteResponse(rw http.ResponseWriter, producer runt
 
 	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}

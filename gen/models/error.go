@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/validate"
 )
 
-// Error the error model is a model for all the error responses coming from PatmosDB
+// Error the error model is a model for all the error responses coming from kvstore
 //
 // swagger:model error
 type Error struct {

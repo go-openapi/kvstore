@@ -4,20 +4,20 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"github.com/casualjim/patmosdb"
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
-	"github.com/casualjim/patmosdb/persist"
+	"github.com/go-openapi/kvstore"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore/persist"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
 // NewGetEntry handles a request for getting an entry
-func NewGetEntry(rt *patmosdb.Runtime) kv.GetEntryHandler {
+func NewGetEntry(rt *kvstore.Runtime) kv.GetEntryHandler {
 	return &getEntry{rt: rt}
 }
 
 type getEntry struct {
-	rt *patmosdb.Runtime
+	rt *kvstore.Runtime
 }
 
 // Handle the get entry request

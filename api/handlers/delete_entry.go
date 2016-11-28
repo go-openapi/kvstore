@@ -3,22 +3,22 @@ package handlers
 import (
 	"net/http"
 
-	"github.com/casualjim/patmosdb"
-	"github.com/casualjim/patmosdb/gen/models"
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
-	"github.com/casualjim/patmosdb/persist"
+	"github.com/go-openapi/kvstore"
+	"github.com/go-openapi/kvstore/gen/models"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore/persist"
 	"github.com/go-openapi/runtime/middleware"
 	"github.com/go-openapi/swag"
 )
 
 // NewDeleteEntry handles a request for deleting an entry
-func NewDeleteEntry(rt *patmosdb.Runtime) kv.DeleteEntryHandler {
+func NewDeleteEntry(rt *kvstore.Runtime) kv.DeleteEntryHandler {
 	return &deleteEntry{rt: rt}
 }
 
 // deleteEntry handles a request for deleting an entry
 type deleteEntry struct {
-	rt *patmosdb.Runtime
+	rt *kvstore.Runtime
 }
 
 // Handle the delete entry request

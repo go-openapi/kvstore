@@ -1,6 +1,8 @@
 package persist
 
 import (
+	"fmt"
+
 	"github.com/spf13/viper"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
@@ -41,8 +43,16 @@ func goleveldbRewriteError(err error) error {
 	return err
 }
 
-func goleveldbRewriteValueError(value Value, err error) (Value, error) {
-	return value, goleveldbRewriteError(err)
+func goleveldbRewriteValueError(value []byte, err error) (Value, error) {
+	if err != nil {
+		return Value{}, goleveldbRewriteError(err)
+	}
+	var result Value
+	_, e := result.UnmarshalMsg(value)
+	if e != nil {
+		return Value{}, fmt.Errorf("msgp unmarshal failed: %v", e)
+	}
+	return result, nil
 }
 
 type goleveldbStore struct {
@@ -50,7 +60,11 @@ type goleveldbStore struct {
 }
 
 func (g *goleveldbStore) Put(key string, value Value) error {
-	return goleveldbRewriteError(g.DB.Put([]byte(key), []byte(value), goleveldbSyncWrite()))
+	data, err := value.MarshalMsg(nil)
+	if err != nil {
+		return err
+	}
+	return goleveldbRewriteError(g.DB.Put([]byte(key), data, goleveldbSyncWrite()))
 }
 
 func (g *goleveldbStore) Get(key string) (Value, error) {
@@ -65,13 +79,17 @@ func (g *goleveldbStore) FindByPrefix(prefix string) ([]KeyValue, error) {
 	iter := g.DB.NewIterator(rg, nil)
 	var result []KeyValue
 	for iter.Next() {
-		result = append(result, KeyValue{Key: string(iter.Key()), Value: iter.Value()})
+		value, err := goleveldbRewriteValueError(iter.Value(), nil)
+		if err != nil {
+			iter.Release()
+			return nil, err
+		}
+		result = append(result, KeyValue{Key: string(iter.Key()), Value: value})
 	}
-	iter.Release()
 
 	err := iter.Error()
 	if err != nil {
-		return nil, err
+		return nil, goleveldbRewriteError(err)
 	}
 	return result, nil
 }

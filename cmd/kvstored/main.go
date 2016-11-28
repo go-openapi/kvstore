@@ -8,10 +8,10 @@ import (
 	flags "github.com/jessevdk/go-flags"
 	"github.com/spf13/viper"
 
-	"github.com/casualjim/patmosdb"
-	"github.com/casualjim/patmosdb/api/handlers"
-	"github.com/casualjim/patmosdb/gen/restapi"
-	"github.com/casualjim/patmosdb/gen/restapi/operations"
+	"github.com/go-openapi/kvstore"
+	"github.com/go-openapi/kvstore/api/handlers"
+	"github.com/go-openapi/kvstore/gen/restapi"
+	"github.com/go-openapi/kvstore/gen/restapi/operations"
 )
 
 func main() {
@@ -23,7 +23,7 @@ func main() {
 		}
 	}
 
-	rt, err := patmosdb.NewRuntime(cfg)
+	rt, err := kvstore.NewRuntime(cfg)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -33,13 +33,13 @@ func main() {
 		log.Fatalln(err)
 	}
 
-	api := operations.NewPatmosAPI(swaggerSpec)
+	api := operations.NewKvstoreAPI(swaggerSpec)
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
 	parser := flags.NewParser(server, flags.Default)
-	parser.ShortDescription = `Patmos K/V datastore`
-	parser.LongDescription = `Patmos is a distributed store for retrieving information`
+	parser.ShortDescription = `K/V store`
+	parser.LongDescription = `K/V store is a simple single node store for retrieving key/value information`
 
 	server.ConfigureFlags()
 	for _, optsGroup := range api.CommandLineOptionsGroups {
@@ -63,6 +63,8 @@ func main() {
 	api.KvFindKeysHandler = handlers.NewFindKeys(rt)
 	api.KvGetEntryHandler = handlers.NewGetEntry(rt)
 	api.KvPutEntryHandler = handlers.NewPutEntry(rt)
+
+	server.SetHandler(api.Serve(nil))
 
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)

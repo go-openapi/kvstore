@@ -8,7 +8,7 @@ import (
 
 	"github.com/go-openapi/runtime"
 
-	"github.com/casualjim/patmosdb/gen/models"
+	"github.com/go-openapi/kvstore/gen/models"
 )
 
 /*FindKeysOK list the keys known to this datastore
@@ -21,7 +21,9 @@ type FindKeysOK struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload []string `json:"body,omitempty"`
 }
 
@@ -63,7 +65,12 @@ func (o *FindKeysOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 	}
 
 	rw.WriteHeader(200)
-	if err := producer.Produce(rw, o.Payload); err != nil {
+	payload := o.Payload
+	if payload == nil {
+		payload = make([]string, 0, 50)
+	}
+
+	if err := producer.Produce(rw, payload); err != nil {
 		panic(err) // let the recovery middleware deal with this
 	}
 
@@ -80,7 +87,9 @@ type FindKeysDefault struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -140,7 +149,8 @@ func (o *FindKeysDefault) WriteResponse(rw http.ResponseWriter, producer runtime
 
 	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}

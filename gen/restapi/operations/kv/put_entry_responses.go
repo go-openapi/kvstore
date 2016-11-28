@@ -9,7 +9,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/casualjim/patmosdb/gen/models"
+	"github.com/go-openapi/kvstore/gen/models"
 )
 
 /*PutEntryCreated entry was created
@@ -168,7 +168,9 @@ type PutEntryNotFound struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -211,7 +213,8 @@ func (o *PutEntryNotFound) WriteResponse(rw http.ResponseWriter, producer runtim
 
 	rw.WriteHeader(404)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
@@ -227,7 +230,9 @@ type PutEntryConflict struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -270,7 +275,8 @@ func (o *PutEntryConflict) WriteResponse(rw http.ResponseWriter, producer runtim
 
 	rw.WriteHeader(409)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}
@@ -287,7 +293,9 @@ type PutEntryDefault struct {
 	*/
 	XRequestID string `json:"X-Request-Id"`
 
-	// In: body
+	/*
+	  In: Body
+	*/
 	Payload *models.Error `json:"body,omitempty"`
 }
 
@@ -347,7 +355,8 @@ func (o *PutEntryDefault) WriteResponse(rw http.ResponseWriter, producer runtime
 
 	rw.WriteHeader(o._statusCode)
 	if o.Payload != nil {
-		if err := producer.Produce(rw, o.Payload); err != nil {
+		payload := o.Payload
+		if err := producer.Produce(rw, payload); err != nil {
 			panic(err) // let the recovery middleware deal with this
 		}
 	}

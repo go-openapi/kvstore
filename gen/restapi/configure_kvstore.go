@@ -8,19 +8,19 @@ import (
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
 
-	"github.com/casualjim/patmosdb/gen/restapi/operations"
-	"github.com/casualjim/patmosdb/gen/restapi/operations/kv"
+	"github.com/go-openapi/kvstore/gen/restapi/operations"
+	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
 )
 
 // This file is safe to edit. Once it exists it will not be overwritten
 
-//go:generate swagger generate server --target ../gen --name Patmos --spec ../swagger/swagger.yml --exclude-main
+//go:generate swagger generate server --target ../gen --name kvstore --spec ../swagger/swagger.yml --exclude-main
 
-func configureFlags(api *operations.PatmosAPI) {
+func configureFlags(api *operations.KvstoreAPI) {
 	// api.CommandLineOptionsGroups = []swag.CommandLineOptionsGroup{ ... }
 }
 
-func configureAPI(api *operations.PatmosAPI) http.Handler {
+func configureAPI(api *operations.KvstoreAPI) http.Handler {
 	// configure the api here
 	api.ServeError = errors.ServeError
 
