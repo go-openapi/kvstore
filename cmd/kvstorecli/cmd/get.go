@@ -25,45 +25,50 @@ import (
 	"log"
 
 	"github.com/go-openapi/kvstore/api/client"
-
 	"github.com/spf13/cobra"
 )
 
-// keysCmd represents the keys command
-var keysCmd = &cobra.Command{
-	Use:   "keys",
-	Short: "List the known keys",
-	Long:  `List the known keys. Allows for a prefix to be specified to filter the keys`,
+// getCmd represents the get command
+var getCmd = &cobra.Command{
+	Use:   "get",
+	Short: "an item from the k/v store",
+	Long: `A longer description that spans multiple lines and likely contains examples
+and usage of using your command. For example:
+
+Cobra is a CLI library for Go that empowers applications.
+This application is a tool to generate the needed files
+to quickly create a Cobra application.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cl, err := client.New(url)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		var prefix string
+		var key string
 		if len(args) > 0 {
-			prefix = args[0]
+			key = args[0]
 		}
-		log.Printf("getting keys for prefix %q", prefix)
-		result, err := cl.FindKeys(prefix)
+
+		log.Printf("getting entry for key %q", key)
+		value, err := cl.Get(key, 0)
 		if err != nil {
 			log.Fatalln(err)
 		}
-
-		fmt.Println(result)
+		fmt.Println("Version:", value.Version)
+		fmt.Println(string(value.Data))
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(keysCmd)
+	RootCmd.AddCommand(getCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// keysCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// getCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// keysCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// getCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }

@@ -25,45 +25,57 @@ import (
 	"log"
 
 	"github.com/go-openapi/kvstore/api/client"
-
 	"github.com/spf13/cobra"
 )
 
-// keysCmd represents the keys command
-var keysCmd = &cobra.Command{
-	Use:   "keys",
-	Short: "List the known keys",
-	Long:  `List the known keys. Allows for a prefix to be specified to filter the keys`,
+var etag uint64
+
+// putCmd represents the put command
+var putCmd = &cobra.Command{
+	Use:   "put",
+	Short: "Create/Update an entry",
+	Long:  `Create or update an entry in the k/v store`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cl, err := client.New(url)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		var prefix string
+		var key string
 		if len(args) > 0 {
-			prefix = args[0]
+			key = args[0]
 		}
-		log.Printf("getting keys for prefix %q", prefix)
-		result, err := cl.FindKeys(prefix)
+		var data string
+		if len(args) > 1 {
+			data = args[1]
+		}
+
+		log.Printf("updating entry for key %q", key)
+		entry := &client.Entry{
+			Data:    []byte(data),
+			Version: etag,
+		}
+		err = cl.Put(key, entry)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		fmt.Println(result)
+		fmt.Println("version:", entry.Version)
+		fmt.Println(string(data))
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(keysCmd)
+	RootCmd.AddCommand(putCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// keysCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// putCmd.PersistentFlags().String("foo", "", "A help for foo")
+	putCmd.Flags().Uint64Var(&etag, "version", 0, "The version for updating a key in the k/v store")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// keysCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// putCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }

@@ -1,29 +1,34 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	"github.com/Sirupsen/logrus"
+	app "github.com/casualjim/go-app"
+	"github.com/casualjim/middlewares"
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
-	"github.com/spf13/viper"
+	"github.com/justinas/alice"
 
 	"github.com/go-openapi/kvstore"
 	"github.com/go-openapi/kvstore/api/handlers"
 	"github.com/go-openapi/kvstore/gen/restapi"
 	"github.com/go-openapi/kvstore/gen/restapi/operations"
+	"github.com/go-openapi/runtime"
 )
 
 func main() {
-	cfg := viper.New()
-	cfg.SetDefault("store.path", "./db/data.db")
-	if err := cfg.ReadInConfig(); err != nil {
-		if _, ok := err.(viper.ConfigFileNotFoundError); !ok {
-			log.Fatalln(err)
-		}
+
+	app, err := app.New("kvstore")
+	if err != nil {
+		logrus.Fatalln(err)
 	}
 
-	rt, err := kvstore.NewRuntime(cfg)
+	log := app.Logger()
+	cfg := app.Config()
+	cfg.SetDefault("store.path", "./db/data.db")
+
+	rt, err := kvstore.NewRuntime(app)
 	if err != nil {
 		log.Fatalln(err)
 	}
@@ -34,6 +39,8 @@ func main() {
 	}
 
 	api := operations.NewKvstoreAPI(swaggerSpec)
+	api.Logger = log.Infof
+
 	server := restapi.NewServer(api)
 	defer server.Shutdown()
 
@@ -59,12 +66,25 @@ func main() {
 		os.Exit(code)
 	}
 
+	api.BinConsumer = runtime.ByteStreamConsumer()
+	api.BinProducer = runtime.ByteStreamProducer()
+	api.JSONConsumer = runtime.JSONConsumer()
+	api.JSONProducer = runtime.JSONProducer()
+
 	api.KvDeleteEntryHandler = handlers.NewDeleteEntry(rt)
 	api.KvFindKeysHandler = handlers.NewFindKeys(rt)
 	api.KvGetEntryHandler = handlers.NewGetEntry(rt)
 	api.KvPutEntryHandler = handlers.NewPutEntry(rt)
 
-	server.SetHandler(api.Serve(nil))
+	handler := alice.New(
+		middlewares.GzipMW(middlewares.DefaultCompression),
+		middlewares.NewRecoveryMW(app.Info().Name, log),
+		middlewares.NewAuditMW(app.Info(), log),
+		middlewares.NewProfiler,
+		middlewares.NewHealthChecksMW(app.Info().BasePath),
+	).Then(api.Serve(nil))
+
+	server.SetHandler(handler)
 
 	if err := server.Serve(); err != nil {
 		log.Fatalln(err)

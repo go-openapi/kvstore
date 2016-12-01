@@ -21,7 +21,6 @@
 package cmd
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/go-openapi/kvstore/api/client"
@@ -29,41 +28,42 @@ import (
 	"github.com/spf13/cobra"
 )
 
-// keysCmd represents the keys command
-var keysCmd = &cobra.Command{
-	Use:   "keys",
-	Short: "List the known keys",
-	Long:  `List the known keys. Allows for a prefix to be specified to filter the keys`,
+// deleteCmd represents the delete command
+var deleteCmd = &cobra.Command{
+	Use:   "delete",
+	Short: "Delete an entry.",
+	Long:  `Delete an entry from the k/v store.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		cl, err := client.New(url)
 		if err != nil {
 			log.Fatalln(err)
 		}
-		var prefix string
+		var key string
 		if len(args) > 0 {
-			prefix = args[0]
+			key = args[0]
 		}
-		log.Printf("getting keys for prefix %q", prefix)
-		result, err := cl.FindKeys(prefix)
+
+		log.Printf("deleting entry for key %q", key)
+		err = cl.Delete(key)
 		if err != nil {
 			log.Fatalln(err)
 		}
 
-		fmt.Println(result)
+		log.Println("deleted entry")
 	},
 }
 
 func init() {
-	RootCmd.AddCommand(keysCmd)
+	RootCmd.AddCommand(deleteCmd)
 
 	// Here you will define your flags and configuration settings.
 
 	// Cobra supports Persistent Flags which will work for this command
 	// and all subcommands, e.g.:
-	// keysCmd.PersistentFlags().String("foo", "", "A help for foo")
+	// deleteCmd.PersistentFlags().String("foo", "", "A help for foo")
 
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
-	// keysCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	// deleteCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
 
 }

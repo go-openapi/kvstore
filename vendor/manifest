@@ -26,6 +26,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/Sirupsen/logrus",
+			"repository": "https://github.com/Sirupsen/logrus",
+			"vcs": "git",
+			"revision": "42b84f9ec624953ecbf81a94feccb3f5935c5edf",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/armon/consul-api",
 			"repository": "https://github.com/armon/consul-api",
 			"vcs": "git",
@@ -46,6 +54,22 @@
 			"repository": "https://github.com/casualjim/flakeid",
 			"vcs": "git",
 			"revision": "c875ddbca837621c990f05b48c255ab31c481c48",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/casualjim/go-app",
+			"repository": "https://github.com/casualjim/go-app",
+			"vcs": "git",
+			"revision": "1d0193af49dfc8c900bcfa463a550a6bd9b177cf",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/casualjim/middlewares",
+			"repository": "https://github.com/casualjim/middlewares",
+			"vcs": "git",
+			"revision": "b824f4e182a84a68a3ddf98ca80a60f4e8c9976a",
 			"branch": "master",
 			"notests": true
 		},
@@ -197,6 +221,22 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/justinas/alice",
+			"repository": "https://github.com/justinas/alice",
+			"vcs": "git",
+			"revision": "1051eaf52fcafdd87ead59d28b065f1fcb8274ec",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/kardianos/osext",
+			"repository": "https://github.com/kardianos/osext",
+			"vcs": "git",
+			"revision": "c2c54e542fb797ad986b31721e1baedf214ca413",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/kr/fs",
 			"repository": "https://github.com/kr/fs",
 			"vcs": "git",
@@ -296,6 +336,22 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/rcrowley/go-metrics",
+			"repository": "https://github.com/rcrowley/go-metrics",
+			"vcs": "git",
+			"revision": "1f30fe9094a513ce4c700b9a54458bbb0c96996c",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/sirupsen/logrus",
+			"repository": "https://github.com/sirupsen/logrus",
+			"vcs": "git",
+			"revision": "42b84f9ec624953ecbf81a94feccb3f5935c5edf",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/spf13/afero",
 			"repository": "https://github.com/spf13/afero",
 			"vcs": "git",
@@ -332,6 +388,14 @@
 			"repository": "https://github.com/spf13/viper",
 			"vcs": "git",
 			"revision": "651d9d916abc3c3d6a91a12549495caba5edffd2",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/stathat/go",
+			"repository": "https://github.com/stathat/go",
+			"vcs": "git",
+			"revision": "74669b9f388d9d788c97399a0824adbfee78400e",
 			"branch": "master",
 			"notests": true
 		},
@@ -555,6 +619,22 @@
 			"revision": "a263ba8db058568bb9beba166777d9c9dbe75d68",
 			"branch": "master",
 			"path": "width",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/airbrake/gobrake.v2",
+			"repository": "https://gopkg.in/airbrake/gobrake.v2",
+			"vcs": "git",
+			"revision": "668876711219e8b0206e2994bf0a59d889c775aa",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "gopkg.in/gemnasium/logrus-airbrake-hook.v2",
+			"repository": "https://gopkg.in/gemnasium/logrus-airbrake-hook.v2",
+			"vcs": "git",
+			"revision": "bfee1239d796830ca346767650cce5ba90d58c57",
+			"branch": "master",
 			"notests": true
 		},
 		{
