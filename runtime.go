@@ -15,7 +15,8 @@ func NewRuntime(app app.Application) (*Runtime, error) {
 		return nil, err
 	}
 	return &Runtime{
-		db: db,
+		db:  db,
+		app: app,
 	}, nil
 }
 
