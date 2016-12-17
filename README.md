@@ -19,7 +19,7 @@ go get -u github.com/tinylib/msgp
 All the generation happens based on `go generate` and is configured in `$project_root/doc.go`.
 
 This application chooses to configure itself differently than the default generated code because it's more convenient and allows for a nicer structure.
-You can the configuration happens in `$project_root/cmd/kvstored`.
+The configuration happens in `$project_root/cmd/kvstored`.
 
 ## Install
 

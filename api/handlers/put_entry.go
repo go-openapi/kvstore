@@ -55,5 +55,6 @@ func (d *putEntry) Handle(params kv.PutEntryParams) middleware.Responder {
 		}
 		return kv.NewPutEntryDefault(0).WithXRequestID(rid).WithPayload(modelsError(err))
 	}
-	return kv.NewPutEntryNoContent().WithXRequestID(rid).WithETag(version)
+
+	return kv.NewPutEntryNoContent().WithXRequestID(rid).WithETag(strconv.FormatUint(version, 10))
 }
