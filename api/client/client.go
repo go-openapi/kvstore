@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io/ioutil"
 	"net/url"
 	"strconv"
 
@@ -61,7 +62,8 @@ type Entry struct {
 
 // Put an entry in the k/v store
 func (k *KvStore) Put(key string, data *Entry) error {
-	params := kv.NewPutEntryParams().WithKey(key).WithBody(bytes.NewBuffer(data.Data))
+	dataReadCloser := ioutil.NopCloser(bytes.NewBuffer(data.Data))
+	params := kv.NewPutEntryParams().WithKey(key).WithBody(dataReadCloser)
 	if data.Version != 0 {
 		params.SetIfMatch(swag.String(strconv.FormatUint(data.Version, 10)))
 	}
