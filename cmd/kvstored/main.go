@@ -14,7 +14,6 @@ import (
 	"github.com/go-openapi/kvstore/api/handlers"
 	"github.com/go-openapi/kvstore/gen/restapi"
 	"github.com/go-openapi/kvstore/gen/restapi/operations"
-	"github.com/go-openapi/runtime"
 )
 
 func main() {
@@ -65,11 +64,6 @@ func main() {
 		}
 		os.Exit(code)
 	}
-
-	api.BinConsumer = runtime.ByteStreamConsumer()
-	api.BinProducer = runtime.ByteStreamProducer()
-	api.JSONConsumer = runtime.JSONConsumer()
-	api.JSONProducer = runtime.JSONProducer()
 
 	api.KvDeleteEntryHandler = handlers.NewDeleteEntry(rt)
 	api.KvFindKeysHandler = handlers.NewFindKeys(rt)
