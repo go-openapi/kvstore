@@ -46,6 +46,15 @@ func NewDeleteEntryParamsWithContext(ctx context.Context) *DeleteEntryParams {
 	}
 }
 
+// NewDeleteEntryParamsWithHTTPClient creates a new DeleteEntryParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewDeleteEntryParamsWithHTTPClient(client *http.Client) *DeleteEntryParams {
+	var ()
+	return &DeleteEntryParams{
+		HTTPClient: client,
+	}
+}
+
 /*DeleteEntryParams contains all the parameters to send to the API endpoint
 for the delete entry operation typically these are written to a http.Request
 */
@@ -87,6 +96,17 @@ func (o *DeleteEntryParams) WithContext(ctx context.Context) *DeleteEntryParams 
 // SetContext adds the context to the delete entry params
 func (o *DeleteEntryParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the delete entry params
+func (o *DeleteEntryParams) WithHTTPClient(client *http.Client) *DeleteEntryParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the delete entry params
+func (o *DeleteEntryParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithXRequestID adds the xRequestID to the delete entry params

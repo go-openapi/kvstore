@@ -46,6 +46,15 @@ func NewGetEntryParamsWithContext(ctx context.Context) *GetEntryParams {
 	}
 }
 
+// NewGetEntryParamsWithHTTPClient creates a new GetEntryParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewGetEntryParamsWithHTTPClient(client *http.Client) *GetEntryParams {
+	var ()
+	return &GetEntryParams{
+		HTTPClient: client,
+	}
+}
+
 /*GetEntryParams contains all the parameters to send to the API endpoint
 for the get entry operation typically these are written to a http.Request
 */
@@ -89,6 +98,17 @@ func (o *GetEntryParams) WithContext(ctx context.Context) *GetEntryParams {
 // SetContext adds the context to the get entry params
 func (o *GetEntryParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the get entry params
+func (o *GetEntryParams) WithHTTPClient(client *http.Client) *GetEntryParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the get entry params
+func (o *GetEntryParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithIfNoneMatch adds the ifNoneMatch to the get entry params

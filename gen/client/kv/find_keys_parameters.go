@@ -46,6 +46,15 @@ func NewFindKeysParamsWithContext(ctx context.Context) *FindKeysParams {
 	}
 }
 
+// NewFindKeysParamsWithHTTPClient creates a new FindKeysParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewFindKeysParamsWithHTTPClient(client *http.Client) *FindKeysParams {
+	var ()
+	return &FindKeysParams{
+		HTTPClient: client,
+	}
+}
+
 /*FindKeysParams contains all the parameters to send to the API endpoint
 for the find keys operation typically these are written to a http.Request
 */
@@ -84,6 +93,17 @@ func (o *FindKeysParams) WithContext(ctx context.Context) *FindKeysParams {
 // SetContext adds the context to the find keys params
 func (o *FindKeysParams) SetContext(ctx context.Context) {
 	o.Context = ctx
+}
+
+// WithHTTPClient adds the HTTPClient to the find keys params
+func (o *FindKeysParams) WithHTTPClient(client *http.Client) *FindKeysParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the find keys params
+func (o *FindKeysParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
 }
 
 // WithXRequestID adds the xRequestID to the find keys params

@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"strings"
 
+	errors "github.com/go-openapi/errors"
 	loads "github.com/go-openapi/loads"
 	runtime "github.com/go-openapi/runtime"
 	middleware "github.com/go-openapi/runtime/middleware"
@@ -27,6 +28,23 @@ func NewKvstoreAPI(spec *loads.Document) *KvstoreAPI {
 		defaultProduces: "application/json",
 		ServerShutdown:  func() {},
 		spec:            spec,
+		ServeError:      errors.ServeError,
+		JSONConsumer:    runtime.JSONConsumer(),
+		BinConsumer:     runtime.ByteStreamConsumer(),
+		JSONProducer:    runtime.JSONProducer(),
+		BinProducer:     runtime.ByteStreamProducer(),
+		KvDeleteEntryHandler: kv.DeleteEntryHandlerFunc(func(params kv.DeleteEntryParams) middleware.Responder {
+			return middleware.NotImplemented("operation KvDeleteEntry has not yet been implemented")
+		}),
+		KvFindKeysHandler: kv.FindKeysHandlerFunc(func(params kv.FindKeysParams) middleware.Responder {
+			return middleware.NotImplemented("operation KvFindKeys has not yet been implemented")
+		}),
+		KvGetEntryHandler: kv.GetEntryHandlerFunc(func(params kv.GetEntryParams) middleware.Responder {
+			return middleware.NotImplemented("operation KvGetEntry has not yet been implemented")
+		}),
+		KvPutEntryHandler: kv.PutEntryHandlerFunc(func(params kv.PutEntryParams) middleware.Responder {
+			return middleware.NotImplemented("operation KvPutEntry has not yet been implemented")
+		}),
 	}
 }
 
@@ -231,22 +249,22 @@ func (o *KvstoreAPI) initHandlerCache() {
 	}
 
 	if o.handlers["DELETE"] == nil {
-		o.handlers[strings.ToUpper("DELETE")] = make(map[string]http.Handler)
+		o.handlers["DELETE"] = make(map[string]http.Handler)
 	}
 	o.handlers["DELETE"]["/kv/{key}"] = kv.NewDeleteEntry(o.context, o.KvDeleteEntryHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/kv"] = kv.NewFindKeys(o.context, o.KvFindKeysHandler)
 
 	if o.handlers["GET"] == nil {
-		o.handlers[strings.ToUpper("GET")] = make(map[string]http.Handler)
+		o.handlers["GET"] = make(map[string]http.Handler)
 	}
 	o.handlers["GET"]["/kv/{key}"] = kv.NewGetEntry(o.context, o.KvGetEntryHandler)
 
 	if o.handlers["PUT"] == nil {
-		o.handlers[strings.ToUpper("PUT")] = make(map[string]http.Handler)
+		o.handlers["PUT"] = make(map[string]http.Handler)
 	}
 	o.handlers["PUT"]["/kv/{key}"] = kv.NewPutEntry(o.context, o.KvPutEntryHandler)
 

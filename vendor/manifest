@@ -320,6 +320,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/philhofer/fwd",
+			"repository": "https://github.com/philhofer/fwd",
+			"vcs": "git",
+			"revision": "98c11a7a6ec829d672b03833c3d69a7fae1ca972",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/pkg/errors",
 			"repository": "https://github.com/pkg/errors",
 			"vcs": "git",
@@ -432,6 +440,15 @@
 			"vcs": "git",
 			"revision": "6b4daa5362b502898ddf367c5c11deb9e7a5c727",
 			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/tinylib/msgp/msgp",
+			"repository": "https://github.com/tinylib/msgp",
+			"vcs": "git",
+			"revision": "362bfb3384d53ae4d5dd745983a4d70b6d23628c",
+			"branch": "master",
+			"path": "/msgp",
 			"notests": true
 		},
 		{

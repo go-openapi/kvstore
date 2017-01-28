@@ -47,6 +47,15 @@ func NewPutEntryParamsWithContext(ctx context.Context) *PutEntryParams {
 	}
 }
 
+// NewPutEntryParamsWithHTTPClient creates a new PutEntryParams object
+// with the default values initialized, and the ability to set a custom HTTPClient for a request
+func NewPutEntryParamsWithHTTPClient(client *http.Client) *PutEntryParams {
+	var ()
+	return &PutEntryParams{
+		HTTPClient: client,
+	}
+}
+
 /*PutEntryParams contains all the parameters to send to the API endpoint
 for the put entry operation typically these are written to a http.Request
 */
@@ -63,7 +72,7 @@ type PutEntryParams struct {
 	*/
 	XRequestID *string
 	/*Body*/
-	Body io.Writer
+	Body io.ReadCloser
 	/*Key
 	  The key for a given entry
 
@@ -97,6 +106,17 @@ func (o *PutEntryParams) SetContext(ctx context.Context) {
 	o.Context = ctx
 }
 
+// WithHTTPClient adds the HTTPClient to the put entry params
+func (o *PutEntryParams) WithHTTPClient(client *http.Client) *PutEntryParams {
+	o.SetHTTPClient(client)
+	return o
+}
+
+// SetHTTPClient adds the HTTPClient to the put entry params
+func (o *PutEntryParams) SetHTTPClient(client *http.Client) {
+	o.HTTPClient = client
+}
+
 // WithIfMatch adds the ifMatch to the put entry params
 func (o *PutEntryParams) WithIfMatch(ifMatch *string) *PutEntryParams {
 	o.SetIfMatch(ifMatch)
@@ -120,13 +140,13 @@ func (o *PutEntryParams) SetXRequestID(xRequestID *string) {
 }
 
 // WithBody adds the body to the put entry params
-func (o *PutEntryParams) WithBody(body io.Writer) *PutEntryParams {
+func (o *PutEntryParams) WithBody(body io.ReadCloser) *PutEntryParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the put entry params
-func (o *PutEntryParams) SetBody(body io.Writer) {
+func (o *PutEntryParams) SetBody(body io.ReadCloser) {
 	o.Body = body
 }
 
