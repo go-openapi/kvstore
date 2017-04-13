@@ -11,6 +11,9 @@ import (
 	"github.com/go-openapi/kvstore/gen/models"
 )
 
+// DeleteEntryNoContentCode is the HTTP code returned for type DeleteEntryNoContent
+const DeleteEntryNoContentCode int = 204
+
 /*DeleteEntryNoContent the delete was successful
 
 swagger:response deleteEntryNoContent

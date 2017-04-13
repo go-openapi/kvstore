@@ -65,6 +65,9 @@ func (m *Error) validateCause(formats strfmt.Registry) error {
 	if m.Cause != nil {
 
 		if err := m.Cause.Validate(formats); err != nil {
+			if ve, ok := err.(*errors.Validation); ok {
+				return ve
+			}
 			return err
 		}
 	}

@@ -12,6 +12,9 @@ import (
 	"github.com/go-openapi/kvstore/gen/models"
 )
 
+// GetEntryOKCode is the HTTP code returned for type GetEntryOK
+const GetEntryOKCode int = 200
+
 /*GetEntryOK entry was found
 
 swagger:response getEntryOK
@@ -117,6 +120,9 @@ func (o *GetEntryOK) WriteResponse(rw http.ResponseWriter, producer runtime.Prod
 
 }
 
+// GetEntryNotModifiedCode is the HTTP code returned for type GetEntryNotModified
+const GetEntryNotModifiedCode int = 304
+
 /*GetEntryNotModified entry was found but not modified
 
 swagger:response getEntryNotModified
@@ -200,6 +206,9 @@ func (o *GetEntryNotModified) WriteResponse(rw http.ResponseWriter, producer run
 
 	rw.WriteHeader(304)
 }
+
+// GetEntryNotFoundCode is the HTTP code returned for type GetEntryNotFound
+const GetEntryNotFoundCode int = 404
 
 /*GetEntryNotFound The entry was not found
 

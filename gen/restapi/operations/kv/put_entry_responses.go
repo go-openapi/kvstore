@@ -7,10 +7,12 @@ import (
 	"net/http"
 
 	"github.com/go-openapi/runtime"
-	"github.com/go-openapi/strfmt"
 
 	"github.com/go-openapi/kvstore/gen/models"
 )
+
+// PutEntryCreatedCode is the HTTP code returned for type PutEntryCreated
+const PutEntryCreatedCode int = 201
 
 /*PutEntryCreated entry was created
 
@@ -96,6 +98,9 @@ func (o *PutEntryCreated) WriteResponse(rw http.ResponseWriter, producer runtime
 	rw.WriteHeader(201)
 }
 
+// PutEntryNoContentCode is the HTTP code returned for type PutEntryNoContent
+const PutEntryNoContentCode int = 204
+
 /*PutEntryNoContent entry was updated
 
 swagger:response putEntryNoContent
@@ -157,6 +162,9 @@ func (o *PutEntryNoContent) WriteResponse(rw http.ResponseWriter, producer runti
 
 	rw.WriteHeader(204)
 }
+
+// PutEntryNotFoundCode is the HTTP code returned for type PutEntryNotFound
+const PutEntryNotFoundCode int = 404
 
 /*PutEntryNotFound The entry was not found
 
@@ -220,6 +228,9 @@ func (o *PutEntryNotFound) WriteResponse(rw http.ResponseWriter, producer runtim
 	}
 }
 
+// PutEntryConflictCode is the HTTP code returned for type PutEntryConflict
+const PutEntryConflictCode int = 409
+
 /*PutEntryConflict there is a version mismatch for the entry
 
 swagger:response putEntryConflict
@@ -281,6 +292,9 @@ func (o *PutEntryConflict) WriteResponse(rw http.ResponseWriter, producer runtim
 		}
 	}
 }
+
+// PutEntryGoneCode is the HTTP code returned for type PutEntryGone
+const PutEntryGoneCode int = 410
 
 /*PutEntryGone The entry is deleted
 

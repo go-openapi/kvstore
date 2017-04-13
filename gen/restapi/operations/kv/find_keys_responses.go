@@ -11,6 +11,9 @@ import (
 	"github.com/go-openapi/kvstore/gen/models"
 )
 
+// FindKeysOKCode is the HTTP code returned for type FindKeysOK
+const FindKeysOKCode int = 200
+
 /*FindKeysOK list the keys known to this datastore
 
 swagger:response findKeysOK
