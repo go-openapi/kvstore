@@ -1,0 +1,13 @@
+version: '2'
+services: 
+  consul:
+    image: consul
+    ports: 
+      - "8400:8400"
+      - "8500:8500"
+    command: agent -server -dev -client 0.0.0.0
+  etcd:
+    image: quay.io/coreos/etcd
+    ports:
+      - "2379:2379"
+    command: etcd --listen-client-urls 'http://0.0.0.0:2379' --advertise-client-urls 'http://localhost:2379'

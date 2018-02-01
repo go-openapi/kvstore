@@ -113,6 +113,7 @@ type TimerMetric struct {
 type AppInfo struct {
 	Name     string `json:"name"`
 	Version  string `json:"version"`
+	Commit   string `json:"commit"`
 	BasePath string `json:"basePath"`
 	Pid      int    `json:"pid"`
 }

@@ -1,0 +1,38 @@
+---
+clone:
+  tags: true
+  path: github.com/casualjim/go-app
+
+compose:
+  consul:
+    image: consul
+  etcd:
+    image: quay.io/coreos/etcd
+ 
+build:
+  compile:
+    image: casualjim/go-app-test:1.7
+    pull: true
+    commands:
+      # installing and running haveged so builds don't take forever
+      - haveged --run 0
+      - rsyslogd
+      - gpg2 --batch --armor --gen-key hack/app.batch
+      - go get -t ./...
+      - go test -race ./...
+      - go test -cover -covermode=atomic -coverprofile=profile.out .
+      - go test -cover -covermode=atomic -coverprofile=logging/profile.out ./logging
+      - go test -cover -covermode=atomic -coverprofile=logging/hooks/syslog/profile.out ./logging/hooks/syslog
+      - go test -cover -covermode=atomic -coverprofile=tracing/profile.out ./tracing
+      - cat ./profile.out > profile.cov
+      - tail -n +2 ./logging/profile.out >> profile.cov
+      - tail -n +2 ./logging/hooks/syslog/profile.out >> profile.cov
+      - tail -n +2 ./tracing/profile.out >> profile.cov
+      - gocov convert profile.cov | gocov report
+
+publish:
+  coverage:
+    server: https://coverage.vmware.run
+    token: $$GITHUB_TOKEN
+    # must_increase: true
+ 

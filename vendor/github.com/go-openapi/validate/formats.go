@@ -15,7 +15,6 @@
 package validate
 
 import (
-	"log"
 	"reflect"
 
 	"github.com/go-openapi/spec"
@@ -48,13 +47,14 @@ func (f *formatValidator) Applies(source interface{}, kind reflect.Kind) bool {
 		case *spec.Schema:
 			sch := source.(*spec.Schema)
 			return kind == reflect.String && f.KnownFormats.ContainsName(sch.Format)
+		case *spec.Header:
+			hdr := source.(*spec.Header)
+			return kind == reflect.String && f.KnownFormats.ContainsName(hdr.Format)
 		}
 		return false
 	}
 	r := doit()
-	if Debug {
-		log.Printf("format validator for %q applies %t for %T (kind: %v)\n", f.Path, r, source, kind)
-	}
+	debugLog("format validator for %q applies %t for %T (kind: %v)\n", f.Path, r, source, kind)
 	return r
 }
 

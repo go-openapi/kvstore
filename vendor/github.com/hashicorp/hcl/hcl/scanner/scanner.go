@@ -351,7 +351,7 @@ func (s *Scanner) scanNumber(ch rune) token.Type {
 	return token.NUMBER
 }
 
-// scanMantissa scans the mantissa begining from the rune. It returns the next
+// scanMantissa scans the mantissa beginning from the rune. It returns the next
 // non decimal rune. It's used to determine wheter it's a fraction or exponent.
 func (s *Scanner) scanMantissa(ch rune) rune {
 	scanned := false
@@ -480,7 +480,7 @@ func (s *Scanner) scanString() {
 		// read character after quote
 		ch := s.next()
 
-		if ch < 0 || ch == eof {
+		if (ch == '\n' && braces == 0) || ch < 0 || ch == eof {
 			s.err("literal not terminated")
 			return
 		}

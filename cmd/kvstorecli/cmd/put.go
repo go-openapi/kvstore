@@ -49,7 +49,7 @@ var putCmd = &cobra.Command{
 			data = args[1]
 		}
 
-		log.Printf("updating entry for key %q", key)
+		log.Printf("updating entry for key %q with value %q", key, data)
 		entry := &client.Entry{
 			Data:    []byte(data),
 			Version: etag,

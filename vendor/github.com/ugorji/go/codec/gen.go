@@ -165,15 +165,9 @@ type genRunner struct {
 //
 // Library users: *DO NOT USE IT DIRECTLY. IT WILL CHANGE CONTINOUSLY WITHOUT NOTICE.*
 func Gen(w io.Writer, buildTags, pkgName, uid string, useUnsafe bool, ti *TypeInfos, typ ...reflect.Type) {
-	// trim out all types which already implement Selfer
-	typ2 := make([]reflect.Type, 0, len(typ))
-	for _, t := range typ {
-		if reflect.PtrTo(t).Implements(selferTyp) || t.Implements(selferTyp) {
-			continue
-		}
-		typ2 = append(typ2, t)
-	}
-	typ = typ2
+	// All types passed to this method do not have a codec.Selfer method implemented directly.
+	// codecgen already checks the AST and skips any types that define the codec.Selfer methods.
+	// Consequently, there's no need to check and trim them if they implement codec.Selfer
 
 	if len(typ) == 0 {
 		return
@@ -1659,15 +1653,8 @@ func (x *genV) MethodNamePfx(prefix string, prim bool) string {
 func genImportPath(t reflect.Type) (s string) {
 	s = t.PkgPath()
 	if genCheckVendor {
-		// HACK: Misbehaviour occurs in go 1.5. May have to re-visit this later.
-		// if s contains /vendor/ OR startsWith vendor/, then return everything after it.
-		const vendorStart = "vendor/"
-		const vendorInline = "/vendor/"
-		if i := strings.LastIndex(s, vendorInline); i >= 0 {
-			s = s[i+len(vendorInline):]
-		} else if strings.HasPrefix(s, vendorStart) {
-			s = s[len(vendorStart):]
-		}
+		// HACK: always handle vendoring. It should be typically on in go 1.6, 1.7
+		s = stripVendor(s)
 	}
 	return
 }
@@ -1888,6 +1875,19 @@ func genInternalSortType(s string, elem bool) string {
 		}
 	}
 	panic("sorttype: unexpected type: " + s)
+}
+
+func stripVendor(s string) string {
+	// HACK: Misbehaviour occurs in go 1.5. May have to re-visit this later.
+	// if s contains /vendor/ OR startsWith vendor/, then return everything after it.
+	const vendorStart = "vendor/"
+	const vendorInline = "/vendor/"
+	if i := strings.LastIndex(s, vendorInline); i >= 0 {
+		s = s[i+len(vendorInline):]
+	} else if strings.HasPrefix(s, vendorStart) {
+		s = s[len(vendorStart):]
+	}
+	return s
 }
 
 // var genInternalMu sync.Mutex
