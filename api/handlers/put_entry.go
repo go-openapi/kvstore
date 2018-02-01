@@ -9,6 +9,7 @@ import (
 	"github.com/go-openapi/kvstore/gen/restapi/operations/kv"
 	"github.com/go-openapi/kvstore/persist"
 	"github.com/go-openapi/runtime/middleware"
+	"github.com/go-openapi/strfmt"
 	"github.com/go-openapi/swag"
 )
 
@@ -43,7 +44,8 @@ func (d *putEntry) Handle(params kv.PutEntryParams) middleware.Responder {
 		return kv.NewPutEntryDefault(0).WithXRequestID(rid).WithPayload(modelsError(e))
 	}
 
-	if err := d.rt.DB().Put(key, persist.Value{Value: value, Version: version}); err != nil {
+	val := &persist.Value{Value: value, Version: version}
+	if err := d.rt.DB().Put(key, val); err != nil {
 		if err == persist.ErrVersionMismatch {
 			return kv.NewPutEntryConflict().WithXRequestID(rid).WithPayload(modelsError(err))
 		}
@@ -56,5 +58,10 @@ func (d *putEntry) Handle(params kv.PutEntryParams) middleware.Responder {
 		return kv.NewPutEntryDefault(0).WithXRequestID(rid).WithPayload(modelsError(err))
 	}
 
-	return kv.NewPutEntryNoContent().WithXRequestID(rid).WithETag(strconv.FormatUint(version, 10))
+	if version == 0 {
+		url := strfmt.URI((&kv.PutEntryURL{Key: key}).String())
+		return kv.NewPutEntryCreated().WithXRequestID(rid).WithEtag(strconv.FormatUint(val.Version, 10)).WithLocation(url)
+	}
+
+	return kv.NewPutEntryNoContent().WithXRequestID(rid).WithETag(strconv.FormatUint(val.Version, 10))
 }

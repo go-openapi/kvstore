@@ -189,12 +189,14 @@ func (o *PutEntryParams) WriteToRequest(r runtime.ClientRequest, reg strfmt.Regi
 
 	}
 
-	// path param key
-	if err := r.SetPathParam("key", o.Key); err != nil {
-		return err
+	if o.Body != nil {
+		if err := r.SetBodyParam(o.Body); err != nil {
+			return err
+		}
 	}
 
-	if err := r.SetBodyParam(o.Body); err != nil {
+	// path param key
+	if err := r.SetPathParam("key", o.Key); err != nil {
 		return err
 	}
 

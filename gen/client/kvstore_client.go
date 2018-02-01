@@ -38,9 +38,6 @@ func NewHTTPClient(formats strfmt.Registry) *Kvstore {
 // using a customizable transport config.
 func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *Kvstore {
 	// ensure nullable parameters have default
-	if formats == nil {
-		formats = strfmt.Default
-	}
 	if cfg == nil {
 		cfg = DefaultTransportConfig()
 	}
@@ -52,6 +49,11 @@ func NewHTTPClientWithConfig(formats strfmt.Registry, cfg *TransportConfig) *Kvs
 
 // New creates a new kvstore client
 func New(transport runtime.ClientTransport, formats strfmt.Registry) *Kvstore {
+	// ensure nullable parameters have default
+	if formats == nil {
+		formats = strfmt.Default
+	}
+
 	cli := new(Kvstore)
 	cli.Transport = transport
 

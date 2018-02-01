@@ -46,7 +46,7 @@ type KeyValue struct {
 
 // Store for values by key
 type Store interface {
-	Put(string, Value) error
+	Put(string, *Value) error
 	Get(string) (Value, error)
 	FindByPrefix(string) ([]KeyValue, error)
 	Delete(string) error

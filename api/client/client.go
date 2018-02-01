@@ -20,7 +20,6 @@ func New(uri string) (*KvStore, error) {
 	if err != nil {
 		return nil, err
 	}
-
 	return &KvStore{client: httpclient.New(httptransport.New(u.Host, u.Path, []string{u.Scheme}), nil)}, nil
 }
 

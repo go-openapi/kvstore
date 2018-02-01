@@ -71,7 +71,10 @@ func main() {
 	api.KvPutEntryHandler = handlers.NewPutEntry(rt)
 
 	handler := alice.New(
+		middlewares.NewRecoveryMW(app.Info().Name, log),
+		middlewares.NewAuditMW(app.Info(), log),
 		middlewares.NewProfiler,
+		middlewares.NewHealthChecksMW(app.Info().BasePath),
 	).Then(api.Serve(nil))
 
 	server.SetHandler(handler)

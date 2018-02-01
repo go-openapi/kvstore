@@ -64,7 +64,7 @@ type goleveldbStore struct {
 	DB *leveldb.DB
 }
 
-func (g *goleveldbStore) Put(key string, value Value) error {
+func (g *goleveldbStore) Put(key string, value *Value) error {
 	// need this to be 0 when this is a new entry
 	newVersion := value.Version
 
