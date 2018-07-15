@@ -26,6 +26,7 @@ type Error struct {
 	Code *int64 `json:"code"`
 
 	// link to help page explaining the error in more detail
+	// Format: uri
 	HelpURL strfmt.URI `json:"helpUrl,omitempty"`
 
 	// The error message
@@ -38,22 +39,18 @@ func (m *Error) Validate(formats strfmt.Registry) error {
 	var res []error
 
 	if err := m.validateCause(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateCode(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateHelpURL(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
 	if err := m.validateMessage(formats); err != nil {
-		// prop
 		res = append(res, err)
 	}
 
@@ -70,7 +67,6 @@ func (m *Error) validateCause(formats strfmt.Registry) error {
 	}
 
 	if m.Cause != nil {
-
 		if err := m.Cause.Validate(formats); err != nil {
 			if ve, ok := err.(*errors.Validation); ok {
 				return ve.ValidateName("cause")

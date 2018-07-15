@@ -22,8 +22,8 @@ swagger:response findKeysOK
 */
 type FindKeysOK struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -34,6 +34,7 @@ type FindKeysOK struct {
 
 // NewFindKeysOK creates FindKeysOK with default headers values
 func NewFindKeysOK() *FindKeysOK {
+
 	return &FindKeysOK{}
 }
 
@@ -88,8 +89,8 @@ swagger:response findKeysDefault
 type FindKeysDefault struct {
 	_statusCode int
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*

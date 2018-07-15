@@ -39,6 +39,9 @@ func (grw gzipResponseWriter) Write(b []byte) (int, error) {
 	if len(grw.Header().Get(headerContentType)) == 0 {
 		grw.Header().Set(headerContentType, http.DetectContentType(b))
 	}
+
+	// Delete the content length after we know we have been written to.
+	grw.Header().Del(headerContentLength)
 	return grw.w.Write(b)
 }
 
@@ -103,6 +106,4 @@ func (h *handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	// the original.
 	h.next.ServeHTTP(grw, r)
 
-	// Delete the content length after we know we have been written to.
-	grw.Header().Del(headerContentLength)
 }

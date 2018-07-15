@@ -17,9 +17,9 @@ import (
 )
 
 // NewFindKeysParams creates a new FindKeysParams object
-// with the default values initialized.
+// no default values defined in spec.
 func NewFindKeysParams() FindKeysParams {
-	var ()
+
 	return FindKeysParams{}
 }
 
@@ -44,9 +44,12 @@ type FindKeysParams struct {
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
-// for simple values it will use straight method calls
+// for simple values it will use straight method calls.
+//
+// To ensure default values, the struct must have been initialized with NewFindKeysParams() beforehand.
 func (o *FindKeysParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
+
 	o.HTTPRequest = r
 
 	qs := runtime.Values(r.URL.Query())
@@ -66,11 +69,15 @@ func (o *FindKeysParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	return nil
 }
 
+// bindXRequestID binds and validates parameter XRequestID from header.
 func (o *FindKeysParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -84,6 +91,7 @@ func (o *FindKeysParams) bindXRequestID(rawData []string, hasKey bool, formats s
 	return nil
 }
 
+// validateXRequestID carries on validations for parameter XRequestID
 func (o *FindKeysParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", (*o.XRequestID), 1); err != nil {
@@ -93,11 +101,15 @@ func (o *FindKeysParams) validateXRequestID(formats strfmt.Registry) error {
 	return nil
 }
 
+// bindPrefix binds and validates parameter Prefix from query.
 func (o *FindKeysParams) bindPrefix(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+	// AllowEmptyValue: false
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}

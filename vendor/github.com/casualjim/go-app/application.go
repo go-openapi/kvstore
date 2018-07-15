@@ -13,12 +13,12 @@ import (
 	"sync"
 	"syscall"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/casualjim/go-app/logging"
 	"github.com/casualjim/go-app/tracing"
 	cjm "github.com/casualjim/middlewares"
 	"github.com/fsnotify/fsnotify"
 	"github.com/kardianos/osext"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 
 	// we enable remote config providers by default

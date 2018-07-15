@@ -3,12 +3,12 @@ package main
 import (
 	"os"
 
-	"github.com/Sirupsen/logrus"
 	app "github.com/casualjim/go-app"
 	"github.com/casualjim/middlewares"
 	loads "github.com/go-openapi/loads"
 	flags "github.com/jessevdk/go-flags"
 	"github.com/justinas/alice"
+	"github.com/sirupsen/logrus"
 
 	"github.com/go-openapi/kvstore"
 	"github.com/go-openapi/kvstore/api/handlers"

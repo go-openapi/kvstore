@@ -23,16 +23,16 @@ swagger:response getEntryOK
 */
 type GetEntryOK struct {
 	/*The version of this entry
-	  Required: true
-	*/
+
+	 */
 	ETag string `json:"ETag"`
 	/*The time this entry was last modified
-	  Required: true
-	*/
+
+	 */
 	LastModified string `json:"Last-Modified"`
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -43,6 +43,7 @@ type GetEntryOK struct {
 
 // NewGetEntryOK creates GetEntryOK with default headers values
 func NewGetEntryOK() *GetEntryOK {
+
 	return &GetEntryOK{}
 }
 
@@ -131,21 +132,22 @@ swagger:response getEntryNotModified
 */
 type GetEntryNotModified struct {
 	/*The version of this entry
-	  Required: true
-	*/
+
+	 */
 	ETag string `json:"ETag"`
 	/*The time this entry was last modified
-	  Required: true
-	*/
+
+	 */
 	LastModified string `json:"Last-Modified"`
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 }
 
 // NewGetEntryNotModified creates GetEntryNotModified with default headers values
 func NewGetEntryNotModified() *GetEntryNotModified {
+
 	return &GetEntryNotModified{}
 }
 
@@ -220,8 +222,8 @@ swagger:response getEntryNotFound
 */
 type GetEntryNotFound struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -232,6 +234,7 @@ type GetEntryNotFound struct {
 
 // NewGetEntryNotFound creates GetEntryNotFound with default headers values
 func NewGetEntryNotFound() *GetEntryNotFound {
+
 	return &GetEntryNotFound{}
 }
 
@@ -283,8 +286,8 @@ swagger:response getEntryDefault
 type GetEntryDefault struct {
 	_statusCode int
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*

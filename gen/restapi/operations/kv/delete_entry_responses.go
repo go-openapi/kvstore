@@ -22,13 +22,14 @@ swagger:response deleteEntryNoContent
 */
 type DeleteEntryNoContent struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 }
 
 // NewDeleteEntryNoContent creates DeleteEntryNoContent with default headers values
 func NewDeleteEntryNoContent() *DeleteEntryNoContent {
+
 	return &DeleteEntryNoContent{}
 }
 
@@ -65,8 +66,8 @@ swagger:response deleteEntryDefault
 type DeleteEntryDefault struct {
 	_statusCode int
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*

@@ -18,9 +18,9 @@ import (
 )
 
 // NewPutEntryParams creates a new PutEntryParams object
-// with the default values initialized.
+// no default values defined in spec.
 func NewPutEntryParams() PutEntryParams {
-	var ()
+
 	return PutEntryParams{}
 }
 
@@ -58,9 +58,12 @@ type PutEntryParams struct {
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
-// for simple values it will use straight method calls
+// for simple values it will use straight method calls.
+//
+// To ensure default values, the struct must have been initialized with NewPutEntryParams() beforehand.
 func (o *PutEntryParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
+
 	o.HTTPRequest = r
 
 	if err := o.bindIfMatch(r.Header[http.CanonicalHeaderKey("If-Match")], true, route.Formats); err != nil {
@@ -73,11 +76,9 @@ func (o *PutEntryParams) BindRequest(r *http.Request, route *middleware.MatchedR
 
 	if runtime.HasBody(r) {
 		o.Body = r.Body
-
 	} else {
 		res = append(res, errors.Required("body", "body"))
 	}
-
 	rKey, rhkKey, _ := route.Params.GetOK("key")
 	if err := o.bindKey(rKey, rhkKey, route.Formats); err != nil {
 		res = append(res, err)
@@ -89,11 +90,15 @@ func (o *PutEntryParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	return nil
 }
 
+// bindIfMatch binds and validates parameter IfMatch from header.
 func (o *PutEntryParams) bindIfMatch(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -107,6 +112,7 @@ func (o *PutEntryParams) bindIfMatch(rawData []string, hasKey bool, formats strf
 	return nil
 }
 
+// validateIfMatch carries on validations for parameter IfMatch
 func (o *PutEntryParams) validateIfMatch(formats strfmt.Registry) error {
 
 	if err := validate.Pattern("If-Match", "header", (*o.IfMatch), `[0-9]*`); err != nil {
@@ -116,11 +122,15 @@ func (o *PutEntryParams) validateIfMatch(formats strfmt.Registry) error {
 	return nil
 }
 
+// bindXRequestID binds and validates parameter XRequestID from header.
 func (o *PutEntryParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -134,6 +144,7 @@ func (o *PutEntryParams) bindXRequestID(rawData []string, hasKey bool, formats s
 	return nil
 }
 
+// validateXRequestID carries on validations for parameter XRequestID
 func (o *PutEntryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", (*o.XRequestID), 1); err != nil {
@@ -143,11 +154,15 @@ func (o *PutEntryParams) validateXRequestID(formats strfmt.Registry) error {
 	return nil
 }
 
+// bindKey binds and validates parameter Key from path.
 func (o *PutEntryParams) bindKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
 
 	o.Key = raw
 
@@ -158,6 +173,7 @@ func (o *PutEntryParams) bindKey(rawData []string, hasKey bool, formats strfmt.R
 	return nil
 }
 
+// validateKey carries on validations for parameter Key
 func (o *PutEntryParams) validateKey(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("key", "path", o.Key, 1); err != nil {

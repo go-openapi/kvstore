@@ -6,7 +6,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Sirupsen/logrus"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -153,7 +153,10 @@ func (r *Registry) Reload() {
 	// if no more path found or parts are exhausted use last config and stop searching
 	configs := make(map[string]*viper.Viper, len(keys))
 	for _, key := range keys {
-		configs[key] = findLongestMatchingPath(key, r.config)
+		cfg := findLongestMatchingPath(key, r.config)
+		if cfg != nil {
+			configs[key] = cfg
+		}
 	}
 
 	// call reconfigure on logger

@@ -209,12 +209,14 @@ func New(host, basePath string, schemes []string) *Runtime {
 		runtime.JSONMime:    runtime.JSONConsumer(),
 		runtime.XMLMime:     runtime.XMLConsumer(),
 		runtime.TextMime:    runtime.TextConsumer(),
+		runtime.HTMLMime:    runtime.TextConsumer(),
 		runtime.DefaultMime: runtime.ByteStreamConsumer(),
 	}
 	rt.Producers = map[string]runtime.Producer{
 		runtime.JSONMime:    runtime.JSONProducer(),
 		runtime.XMLMime:     runtime.XMLProducer(),
 		runtime.TextMime:    runtime.TextProducer(),
+		runtime.HTMLMime:    runtime.TextProducer(),
 		runtime.DefaultMime: runtime.ByteStreamProducer(),
 	}
 	rt.Transport = http.DefaultTransport
@@ -276,6 +278,34 @@ func (r *Runtime) selectScheme(schemes []string) string {
 	}
 	return scheme
 }
+func transportOrDefault(left, right http.RoundTripper) http.RoundTripper {
+	if left == nil {
+		return right
+	}
+	return left
+}
+
+// EnableConnectionReuse drains the remaining body from a response
+// so that go will reuse the TCP connections.
+//
+// This is not enabled by default because there are servers where
+// the response never gets closed and that would make the code hang forever.
+// So instead it's provided as a http client middleware that can be used to override
+// any request.
+func (r *Runtime) EnableConnectionReuse() {
+	if r.client == nil {
+		r.Transport = KeepAliveTransport(
+			transportOrDefault(r.Transport, http.DefaultTransport),
+		)
+		return
+	}
+
+	r.client.Transport = KeepAliveTransport(
+		transportOrDefault(r.client.Transport,
+			transportOrDefault(r.Transport, http.DefaultTransport),
+		),
+	)
+}
 
 // Submit a request and when there is a body on success it will turn that into the result
 // all other things are turned into an api error for swagger which retains the status code
@@ -310,6 +340,10 @@ func (r *Runtime) Submit(operation *runtime.ClientOperation) (interface{}, error
 			cmt = mediaType
 			break
 		}
+	}
+
+	if _, ok := r.Producers[cmt]; !ok && cmt != runtime.MultipartFormMime {
+		return nil, fmt.Errorf("none of producers: %v registered. try %s", r.Producers, cmt)
 	}
 
 	req, err := request.buildHTTP(cmt, r.BasePath, r.Producers, r.Formats, auth)
@@ -386,8 +420,10 @@ func (r *Runtime) Submit(operation *runtime.ClientOperation) (interface{}, error
 
 	cons, ok := r.Consumers[mt]
 	if !ok {
-		// scream about not knowing what to do
-		return nil, fmt.Errorf("no consumer: %q", ct)
+		if cons, ok = r.Consumers["*/*"]; !ok {
+			// scream about not knowing what to do
+			return nil, fmt.Errorf("no consumer: %q", ct)
+		}
 	}
 	return readResponse.ReadResponse(response{res}, cons)
 }

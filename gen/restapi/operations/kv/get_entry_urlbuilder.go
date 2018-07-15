@@ -48,6 +48,7 @@ func (o *GetEntryURL) Build() (*url.URL, error) {
 	} else {
 		return nil, errors.New("Key is required on GetEntryURL")
 	}
+
 	_basePath := o._basePath
 	result.Path = golangswaggerpaths.Join(_basePath, _path)
 

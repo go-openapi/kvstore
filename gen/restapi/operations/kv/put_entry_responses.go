@@ -23,21 +23,22 @@ swagger:response putEntryCreated
 */
 type PutEntryCreated struct {
 	/*The version of this entry
-	  Required: true
-	*/
+
+	 */
 	Etag string `json:"Etag"`
 	/*the location to get the newly created entry
-	  Required: true
-	*/
+
+	 */
 	Location strfmt.URI `json:"Location"`
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 }
 
 // NewPutEntryCreated creates PutEntryCreated with default headers values
 func NewPutEntryCreated() *PutEntryCreated {
+
 	return &PutEntryCreated{}
 }
 
@@ -112,17 +113,18 @@ swagger:response putEntryNoContent
 */
 type PutEntryNoContent struct {
 	/*The version of this entry
-	  Required: true
-	*/
+
+	 */
 	ETag string `json:"ETag"`
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 }
 
 // NewPutEntryNoContent creates PutEntryNoContent with default headers values
 func NewPutEntryNoContent() *PutEntryNoContent {
+
 	return &PutEntryNoContent{}
 }
 
@@ -179,8 +181,8 @@ swagger:response putEntryNotFound
 */
 type PutEntryNotFound struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -191,6 +193,7 @@ type PutEntryNotFound struct {
 
 // NewPutEntryNotFound creates PutEntryNotFound with default headers values
 func NewPutEntryNotFound() *PutEntryNotFound {
+
 	return &PutEntryNotFound{}
 }
 
@@ -244,8 +247,8 @@ swagger:response putEntryConflict
 */
 type PutEntryConflict struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -256,6 +259,7 @@ type PutEntryConflict struct {
 
 // NewPutEntryConflict creates PutEntryConflict with default headers values
 func NewPutEntryConflict() *PutEntryConflict {
+
 	return &PutEntryConflict{}
 }
 
@@ -309,8 +313,8 @@ swagger:response putEntryGone
 */
 type PutEntryGone struct {
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*
@@ -321,6 +325,7 @@ type PutEntryGone struct {
 
 // NewPutEntryGone creates PutEntryGone with default headers values
 func NewPutEntryGone() *PutEntryGone {
+
 	return &PutEntryGone{}
 }
 
@@ -372,8 +377,8 @@ swagger:response putEntryDefault
 type PutEntryDefault struct {
 	_statusCode int
 	/*The request id this is a response to
-	  Required: true
-	*/
+
+	 */
 	XRequestID string `json:"X-Request-Id"`
 
 	/*

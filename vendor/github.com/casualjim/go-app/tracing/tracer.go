@@ -4,8 +4,8 @@ import (
 	"runtime"
 	"time"
 
-	logrus "github.com/Sirupsen/logrus"
 	metrics "github.com/rcrowley/go-metrics"
+	logrus "github.com/sirupsen/logrus"
 )
 
 const (

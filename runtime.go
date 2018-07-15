@@ -1,10 +1,10 @@
 package kvstore
 
 import (
-	"github.com/Sirupsen/logrus"
 	app "github.com/casualjim/go-app"
 	"github.com/casualjim/go-app/tracing"
 	"github.com/go-openapi/kvstore/persist"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 

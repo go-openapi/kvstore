@@ -16,9 +16,9 @@ import (
 )
 
 // NewGetEntryParams creates a new GetEntryParams object
-// with the default values initialized.
+// no default values defined in spec.
 func NewGetEntryParams() GetEntryParams {
-	var ()
+
 	return GetEntryParams{}
 }
 
@@ -49,9 +49,12 @@ type GetEntryParams struct {
 }
 
 // BindRequest both binds and validates a request, it assumes that complex things implement a Validatable(strfmt.Registry) error interface
-// for simple values it will use straight method calls
+// for simple values it will use straight method calls.
+//
+// To ensure default values, the struct must have been initialized with NewGetEntryParams() beforehand.
 func (o *GetEntryParams) BindRequest(r *http.Request, route *middleware.MatchedRoute) error {
 	var res []error
+
 	o.HTTPRequest = r
 
 	if err := o.bindIfNoneMatch(r.Header[http.CanonicalHeaderKey("If-None-Match")], true, route.Formats); err != nil {
@@ -73,11 +76,15 @@ func (o *GetEntryParams) BindRequest(r *http.Request, route *middleware.MatchedR
 	return nil
 }
 
+// bindIfNoneMatch binds and validates parameter IfNoneMatch from header.
 func (o *GetEntryParams) bindIfNoneMatch(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -87,11 +94,15 @@ func (o *GetEntryParams) bindIfNoneMatch(rawData []string, hasKey bool, formats 
 	return nil
 }
 
+// bindXRequestID binds and validates parameter XRequestID from header.
 func (o *GetEntryParams) bindXRequestID(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: false
+
 	if raw == "" { // empty values pass all other validations
 		return nil
 	}
@@ -105,6 +116,7 @@ func (o *GetEntryParams) bindXRequestID(rawData []string, hasKey bool, formats s
 	return nil
 }
 
+// validateXRequestID carries on validations for parameter XRequestID
 func (o *GetEntryParams) validateXRequestID(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("X-Request-Id", "header", (*o.XRequestID), 1); err != nil {
@@ -114,11 +126,15 @@ func (o *GetEntryParams) validateXRequestID(formats strfmt.Registry) error {
 	return nil
 }
 
+// bindKey binds and validates parameter Key from path.
 func (o *GetEntryParams) bindKey(rawData []string, hasKey bool, formats strfmt.Registry) error {
 	var raw string
 	if len(rawData) > 0 {
 		raw = rawData[len(rawData)-1]
 	}
+
+	// Required: true
+	// Parameter is provided by construction from the route
 
 	o.Key = raw
 
@@ -129,6 +145,7 @@ func (o *GetEntryParams) bindKey(rawData []string, hasKey bool, formats strfmt.R
 	return nil
 }
 
+// validateKey carries on validations for parameter Key
 func (o *GetEntryParams) validateKey(formats strfmt.Registry) error {
 
 	if err := validate.MinLength("key", "path", o.Key, 1); err != nil {

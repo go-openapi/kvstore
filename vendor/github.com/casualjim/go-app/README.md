@@ -1,18 +1,18 @@
 # Go App [![Build Status](https://ci.vmware.run/api/badges/casualjim/go-app/status.svg)](https://ci.vmware.run/casualjim/go-app) [![Coverage](https://coverage.vmware.run/badges/casualjim/go-app/coverage.svg)](https://coverage.vmware.run/casualjim/go-app)
 
 A library to provide application level context, config reloading and log configuration.
-This is a companion to golangs context.  
+This is a companion to golangs context.
 It also tries to provide an extensible way for adding log hooks without requiring to download all of github.
 
 This package is one of those tools you won't always need, but when you need it you'll know you need it.
 
 ## Depends on
 
-* [logrus](https://github.com/Sirupsen/logrus)
+* [logrus](https://github.com/sirupsen/logrus)
 * [viper](https://github.com/spf13/viper)
 * [go-metrics](github.com/rcrowley/go-metrics)
 
-## Includes 
+## Includes
 
 * [tiny tracer](#tracer)
 * [modular initialization](#modular-initialization)
@@ -22,7 +22,7 @@ This package is one of those tools you won't always need, but when you need it y
 
 ## Config providers
 
-By default the the application will look for config files in order of precedence: 
+By default the the application will look for config files in order of precedence:
 
 * $HOME/.config/$APP_NAME
 * /etc/$APP_NAME
@@ -44,7 +44,7 @@ export CONFIG_REMOTE_URL="consul://localhost:8500/[app-name]/config.[type]"
 
 The extension of the file path is used to determine the content type for the key.
 
-When you make a change to the config in the remote provider or in the local file the system will reload the loggers, and trigger the appropriate hook of registered modules. 
+When you make a change to the config in the remote provider or in the local file the system will reload the loggers, and trigger the appropriate hook of registered modules.
 
 ## Tracer
 
@@ -87,7 +87,7 @@ Start | Called when the module is started, or enabled at runtime
 Reload | Called when the config has changed and the module needs to reconfigure itself
 Stop | Called when the module is stopped, or disabled at runtime
 
-Each module is identified by a unique name, this defaults to its package name, 
+Each module is identified by a unique name, this defaults to its package name,
 
 ### Usage
 
@@ -102,7 +102,7 @@ var Module = app.MakeModule(
   app.Init(func(app app.Application) error {
     orders := new(ordersService)
     app.Set("ordersService", orders)
-    orders.app = app 
+    orders.app = app
     return nil
   }),
   app.Reload(func(app app.Application) error {
@@ -122,7 +122,7 @@ type odersService struct {
 
 func (o *ordersService) Create(o *Order) error {
   var db OrdersStore
-  o.app.Get("ordersDb", &db)  
+  o.app.Get("ordersDb", &db)
   return db.Save(o)
 }
 ```
@@ -157,7 +157,7 @@ func main() {
 
 The configuration can be expressed in JSON, YAML, TOML or HCL.
 
-example: 
+example:
 
 ```hcl
 logging {
@@ -166,11 +166,11 @@ logging {
     hooks = [
       { name = "journald" }
     ]
-  
+
     child1 {
       level = "info"
       hooks = [
-        { 
+        {
           name = "file"
           path = "./app.log"
         },
