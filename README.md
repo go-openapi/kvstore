@@ -12,8 +12,8 @@ To generate the code required this application makes use of:
 Install with:
 
 ```
-go get -u github.com/go-swagger/go-swagger/cmd/swagger
-go get -u github.com/tinylib/msgp
+go install github.com/go-swagger/go-swagger/cmd/swagger@latest
+go install github.com/tinylib/msgp@latest
 ```
 
 All the generation happens based on `go generate` and is configured in `$project_root/doc.go`.
@@ -26,7 +26,7 @@ The configuration happens in `$project_root/cmd/kvstored`.
 You can install this application with the regular go means.
 
 ```
-go get github.com/go-openapi/kvstore/cmd/...
+go install github.com/go-openapi/kvstore/cmd/...@latest
 ```
 
 ## Running
